@@ -36,3 +36,5 @@ PWA、手機／桌機封裝、雲端存檔、自由尋路、真正堆疊高度�
 ## Harbor
 
 已以獨立專案 `little-days` 納管，群組「遊戲」、生命週期「開發中」，登錄公開網址供排程探測。根目錄 `progress.md` 已更新並建立本機 Git 紀錄；已比照 Tensift 推送至公開 GitHub repository `frobel0520/little-days` 的 `main`。Harbor 以 repository 同步 commit／Issues／progress，2026-10-01 13:33（台北）首次文件同步成功，來源為 `progress.md`、3 項待辦；GitHub 同步成功，網站狀態正常。與 Playmint 的關係為同一產品系列；Playmint 入口目前尚未加入此遊戲卡片。
+
+管理者預覽接線（2026-10-01）：Harbor 的 `PREVIEW_TOKEN_SECRET` 已存在，小日子收納尚無 `HARBOR_PREVIEW_SECRET`。Cloudflare 不提供讀回 secret 原值，本機無副本；待持有既有值的管理者將同一值設定到 `playmint-little-days` production，再重新部署驗證。維護 middleware、健康與進度追蹤仍正常。
