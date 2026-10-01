@@ -49,4 +49,4 @@ npm test
 
 ## 進度與追蹤
 
-開發狀態與下一步见 [progress.md](progress.md)。Harbor 以 `little-days` 獨立納管公開網址與 GitHub 進度；遊戲屬於 Playmint 系列。
+開發狀態與下一步見 [progress.md](progress.md)。Harbor 以 `little-days` 獨立納管公開網址；GitHub 進度同步尚待上傳授權；遊戲屬於 Playmint 系列。
