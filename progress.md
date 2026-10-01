@@ -2,7 +2,7 @@
 
 更新：2026-10-01（Asia/Taipei）
 
-狀態：三關敘事試玩已公開；本輪先告一段落，後续聚焦遊戲本體，手機／桌機封裝延後。
+狀態：三關敘事試玩已公開；本輪先告一段落，後續聚焦遊戲本體，手機／桌機封裝延後。
 
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
@@ -32,4 +32,4 @@ PWA、手機／桌機封裝、雲端存檔、自由尋路、真正堆疊高度�
 
 ## Harbor
 
-以獨立專案 `little-days` 納管，群組「遊戲」，追蹤公開網址與此 repository 的根目錄 `progress.md`。與 Playmint 的關係為同一產品系列；Playmint 入口目前尚未加入此遊戲卡片。
+已以獨立專案 `little-days` 納管，群組「遊戲」、生命週期「開發中」，登錄公開網址供排程探測。根目錄 `progress.md` 已更新並建立本機 Git 紀錄；尚未推送 GitHub，文件與 commit 的自動同步待私人 repository 上傳授權後啟用。與 Playmint 的關係為同一產品系列；Playmint 入口目前尚未加入此遊戲卡片。
