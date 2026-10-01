@@ -20,6 +20,9 @@ Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 - [x] 20 項測試通過，完成三關本機互動試玩。
 - [x] 部署 Cloudflare Pages，公開版載入與相機收納操作驗證通過。
 
+- [x] 比照 Tensift：公開 GitHub repository、Harbor 納管與 Playmint 產品關係。
+- [x] 加入 Harbor 產生的維護 middleware 及 `/api/health` 健康檢查。
+
 ## 下一步
 
 - [ ] 收集三關試玩回饋，確認操作、節奏、故事與放鬆感。
@@ -32,4 +35,4 @@ PWA、手機／桌機封裝、雲端存檔、自由尋路、真正堆疊高度�
 
 ## Harbor
 
-已以獨立專案 `little-days` 納管，群組「遊戲」、生命週期「開發中」，登錄公開網址供排程探測。根目錄 `progress.md` 已更新並建立本機 Git 紀錄；尚未推送 GitHub，文件與 commit 的自動同步待私人 repository 上傳授權後啟用。與 Playmint 的關係為同一產品系列；Playmint 入口目前尚未加入此遊戲卡片。
+已以獨立專案 `little-days` 納管，群組「遊戲」、生命週期「開發中」，登錄公開網址供排程探測。根目錄 `progress.md` 已更新並建立本機 Git 紀錄；已比照 Tensift 推送至公開 GitHub repository `frobel0520/little-days` 的 `main`。Harbor 以 repository 同步 commit／Issues／progress，首次同步待排程執行。與 Playmint 的關係為同一產品系列；Playmint 入口目前尚未加入此遊戲卡片。
