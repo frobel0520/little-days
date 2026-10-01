@@ -51,4 +51,4 @@ npm test
 
 開發狀態與下一步見 [progress.md](progress.md)。Harbor 以 `little-days` 獨立納管公開網址；追蹤公開 GitHub repository `frobel0520/little-days` 的 `main` 與根目錄 `progress.md`；遊戲屬於 Playmint 系列。
 
-與 Tensift 相同，`functions/_middleware.js` 由 Harbor 產生，提供維護模式與公告；讀取失敗時放行，逾時 800 ms。`/api/health` 不受維護攔截。尚未設定 `HARBOR_PREVIEW_SECRET`，管理者預覽連結暫不可用。更新 middleware 請在 Harbor 執行 `npm run build:middleware -- --slug=little-days --base-url=https://harbor-1wk.pages.dev --health-path=/api/health` 再複製產物。
+與 Tensift 相同，`functions/_middleware.js` 由 Harbor 產生，提供維護模式與公告；讀取失敗時放行，逾時 800 ms。`/api/health` 不受維護攔截。已設定 `HARBOR_PREVIEW_SECRET`，管理者預覽連結於 2026-10-01 驗證通過。更新 middleware 請在 Harbor 執行 `npm run build:middleware -- --slug=little-days --base-url=https://harbor-1wk.pages.dev --health-path=/api/health` 再複製產物。
