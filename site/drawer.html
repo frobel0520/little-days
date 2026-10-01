@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3e9">
+  <meta name="description" content="小日子收納：把日常小物放進剛剛好的空間。五個可愛的收納解謎，慢慢整理，慢慢玩。">
+  <title>小日子收納 · Playmint</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='16' width='48' height='38' rx='12' fill='%23b9cfad' stroke='%23655d50' stroke-width='3'/%3E%3Cpath d='M24 16V10h16v6M25 35h14' fill='none' stroke='%23655d50' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://playmint.pages.dev/" aria-label="Playmint 更多遊戲"><span class="brand-mark">p.</span> playmint <span class="brand-label">的小小遊戲</span></a>
+    <a class="more" href="https://playmint.pages.dev/">更多遊戲 <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="shell">
+    <section class="heading">
+      <div><p class="eyebrow">LITTLE DAYS, LITTLE JOYS</p><h1>小日子<span>收納</span><span class="title-flower" aria-hidden="true">✳</span></h1><p class="intro">不急，把生活慢慢放好。</p></div>
+      <div class="chapter-stamp"><span>五個小日常</span><strong id="total-stars">0 / 5</strong><span>慢慢收藏</span></div>
+    </section>
+    <nav class="chapters" id="chapters" aria-label="選擇收納場景"></nav>
+    <section class="game-layout" aria-label="收納遊戲">
+      <div class="play-area">
+        <div class="scene-heading"><div><p class="scene-number" id="scene-number"></p><h2 id="scene-title"></h2></div><span class="scene-badge" id="scene-badge"></span></div>
+        <p class="scene-caption" id="scene-caption"></p>
+        <div class="tabletop" id="tabletop">
+          <div class="table-note" aria-hidden="true">a place for<br>little things ♡</div>
+          <div class="sprig" id="sprig"></div>
+          <div class="container-wrap">
+            <div class="container-rim"><div class="board" id="board" aria-label="收納空間。選好小物後，點空白處放下；方向鍵移動，Enter 放下。" role="group" tabindex="0"></div></div>
+            <div class="drawer-handle" aria-hidden="true"></div>
+          </div>
+          <span class="table-corner" aria-hidden="true">with a little care</span>
+        </div>
+        <div class="board-footer"><span><span class="tiny-flower" aria-hidden="true">✳</span> 每樣小物，都有剛剛好的位置</span><span id="progress-label"></span></div>
+        <div class="progress-track" aria-hidden="true"><div id="progress-fill"></div></div>
+      </div>
+      <aside class="inventory">
+        <div class="inventory-heading"><h2>等你安放的小物</h2><span id="remaining"></span></div>
+        <p class="inventory-tip">拖進盒子，或選好小物再點空白處。</p>
+        <div class="tray" id="tray"></div>
+        <div class="selection-bar"><span id="selected-name">先挑一件喜歡的小物</span><button id="rotate" class="small-button" disabled aria-label="旋轉選取的小物">↻ <span>旋轉</span><kbd>R</kbd></button></div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite">全部放進去，就是今天的小成就。</p>
+        <div class="tools"><button id="undo" disabled><span aria-hidden="true">↶</span> 撤銷</button><button id="hint"><span aria-hidden="true">☼</span> 小提示</button><button id="reset"><span aria-hidden="true">⟳</span> 重來</button></div>
+        <div class="gentle-note"><span aria-hidden="true">♡</span><p>沒有倒數，也不用完美。<br>稍微疊放，也一樣很可愛。</p></div>
+      </aside>
+    </section>
+    <footer class="page-footer"><span>一點空間，一點好心情。</span><span>Made with care · Playmint</span></footer>
+  </main>
+  <div class="drag-ghost" id="drag-ghost" hidden></div>
+  <dialog id="completion" aria-labelledby="completion-title">
+    <div class="celebration-flower" aria-hidden="true">✳</div><p class="eyebrow">A LITTLE MOMENT OF JOY</p><h2 id="completion-title">全部都放好了！</h2><p id="completion-copy"></p><div class="completion-art" id="completion-art"></div><button class="primary-button" id="next">整理下一個小日常</button><button class="text-button" id="stay">再欣賞一下</button>
+  </dialog>
+  <noscript>請啟用 JavaScript，就能開始收納小日子。</noscript>
+</body>
+</html>
