@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f1e6">
+<title>小日子收納 · 街角的貓</title><meta name="description" content="整理搬家房間、街角花店與舊書店，慢慢認識奶油、芝麻與墨墨。自由收納，不用排得完美。">
+<link rel="stylesheet" href="room.css"><script type="module" src="room.js"></script>
+</head>
+<body>
+<header class="header"><a href="https://playmint.pages.dev/" class="brand"><span>p.</span>playmint</a><span class="header-note">留一點時間，給自己的小日子。</span><a href="drawer.html" class="back-link">抽屜小品 ↗</a></header>
+<main class="shell">
+<div class="title-row"><div><p class="eyebrow">LITTLE DAYS · A SUNNY AFTERNOON</p><h1>小日子收納<span aria-hidden="true">✳</span></h1><p class="subtitle">整理一個角落，認識一位毛茸茸的新鄰居。</p></div><div class="day-badge"><span>今天的日常</span><strong id="day-number">01</strong><span id="day-place">午後的房間</span></div></div>
+<nav id="level-nav" class="level-nav" aria-label="選擇關卡"></nav><section class="chapter-letter"><div><span id="letter-author" class="eyebrow"></span><p id="chapter-letter"></p></div><button id="open-notebook">貓咪筆記 <span id="met-count">0 / 3</span></button></section>
+<section class="game" aria-label="午後的房間收納遊戲">
+<div class="room-panel">
+<div class="room-caption"><span><i aria-hidden="true"></i> <span id="chapter-place">午後的房間</span></span><span id="chapter-subtitle">把搬家箱裡的小物，放到喜歡的位置。</span></div>
+<div class="scene-host" id="scene-host"><div id="pick-label" class="pick-label" hidden></div><div class="loading" id="loading"><span>✳</span>陽光正在照進來…</div></div>
+<div class="scene-tools"><span class="scene-instruction">拖動小物，或先選小物再點家具。<br class="mobile-break">重疊處再點可換選；空白處拖動畫面。</span><div class="zoom-controls" aria-label="畫面縮放"><button id="zoom-out" aria-label="縮小畫面">−</button><button id="zoom-fit" aria-label="顯示完整房間">全景</button><button id="zoom-in" aria-label="放大畫面">＋</button></div></div>
+</div>
+<aside class="sidebar">
+<div class="side-heading"><h2>替小物找個家</h2><span id="count">0 / 7</span></div><p class="side-note">每件都能再拿起來，換個喜歡的位置。</p>
+<div class="item-list" id="item-list" aria-label="選擇小物"></div>
+<div class="selection"><span id="selection-name">先挑一件小物</span><button id="rotate" disabled aria-label="轉向選取的小物">↻ 轉向 <kbd>R</kbd></button><button id="deselect" disabled aria-label="取消選取小物">取消</button></div>
+<p id="item-story" class="item-story" hidden></p><p class="surface-caption">選好小物，也可以直接放到</p><div class="surface-controls" id="surface-controls" aria-label="放置位置"></div>
+<p class="message" id="message" role="status" aria-live="polite">不急，每件小物都會找到自己的位置。</p>
+<section class="cat-card" aria-label="貓咪近況"><div id="cat-portrait"></div><div><strong id="cat-name"></strong><p id="cat-status" role="status" aria-live="polite"></p></div><button id="greet-cat" class="greet-cat" disabled>輕聲打個招呼</button></section>
+<div class="history-tools"><button id="undo" disabled>↶ 撤銷</button><button id="reset">⟳ 重新整理</button><button id="sound" aria-pressed="false">♫ 音效關</button></div>
+<button id="finish" class="finish" disabled>今天收好了 <span aria-hidden="true">♡</span></button><p class="finish-note" id="finish-note">把小物從箱子裡拿出來就好。</p>
+</aside>
+</section>
+<footer><span>不用排得完美，舒服就很好。</span><span>Made with care · Playmint</span></footer>
+</main>
+<dialog id="completion" aria-labelledby="completion-title"><span class="bloom" aria-hidden="true">✳</span><p class="eyebrow">A LITTLE MOMENT OF JOY</p><h2 id="completion-title">今天，也整理得好好的。</h2><p id="ending-text"></p><p id="ending-clue" class="ending-clue"></p><button id="continue" class="finish">繼續待在房間裡</button><button id="next-level" class="next-level">下一關</button></dialog>
+<dialog id="notebook" aria-labelledby="notebook-title"><p class="eyebrow">CATS OF THE NEIGHBORHOOD</p><h2 id="notebook-title">街角貓咪筆記</h2><p class="notebook-intro">每次整理，都多認識一點牠們的生活。</p><div id="notebook-cats"></div><p id="notebook-ending" hidden>相冊的最後一頁還空著。下次，拍一張現在的牠們吧。</p><button id="close-notebook" class="finish">收好筆記，回到房間</button></dialog>
+<noscript>請啟用 JavaScript，就能開始整理午後的房間。</noscript>
+</body></html>

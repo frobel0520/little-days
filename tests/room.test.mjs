@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { project,inverse,items,surfaces,fit,surfaceAt,initialState,isValid,ready,depth,gentlePlacement } from '../site/room-model.js';
+test('projection round trip at every support height',()=>{for(const s of surfaces){const p=project(s.x+.2,s.y+.3,s.z),r=inverse(p.x,p.y,s.z);assert.ok(Math.abs(r.x-s.x-.2)<1e-9);assert.ok(Math.abs(r.y-s.y-.3)<1e-9);}});
+test('seven natural-sized items; continuous positioning and edge tolerance',()=>{assert.equal(items.length,7);const state=initialState();for(const i of items)assert.ok(isValid(i.id,state[i.id]),i.id);const p=fit('desk','camera',3.12345,2.23456,1);assert.equal(p.x,3.12345);assert.ok(isValid('camera',p));assert.ok(isValid('camera',fit('desk','camera',-10,30,0)));assert.equal(fit('desk','camera',NaN,0),null);assert.equal(fit('desk','camera',0,0,Infinity),null);});
+test('surface hit testing chooses correct tier and preserves elevation',()=>{for(const id of ['desk','shelf-low','shelf-high','drawer','floor']){const s=surfaces.find(s=>s.id===id),p=project(s.x+s.w/2,s.y+s.d/2,s.z);assert.equal(surfaceAt(p.x,p.y,'mug',0,id).surface,id);}assert.equal(surfaceAt(-999,-999,'mug'),null);});
+test('relaxed completion needs every item out of the box; overlap is allowed',()=>{const s=initialState();assert.equal(ready(s),false);for(const it of items)s[it.id]=fit('desk',it.id,2.123,2.1);assert.ok(ready(s));s.mug=initialState().mug;assert.equal(ready(s),false);});
+test('gentle displacement never rejects crowded valid surfaces',()=>{const s=initialState();s.book=fit('desk','book',2,2);const p=gentlePlacement(s,'camera',fit('desk','camera',2,2));assert.ok(isValid('camera',p));assert.notEqual(p.x,2);assert.ok(depth(p,items[0])>0);});
