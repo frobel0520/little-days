@@ -1,0 +1,2443 @@
+{
+  "version": 1,
+  "chapters": [
+    {
+      "id": "home",
+      "number": "01",
+      "title": "箱子裡的新室友",
+      "place": "午後的房間",
+      "subtitle": "搬來的第一天，先替小物找個家。",
+      "author": "房東的便條",
+      "letter": "東西慢慢放就好。奶油如果在箱子裡，先讓牠睡。",
+      "cat": "cream",
+      "surfaceNames": {},
+      "items": [
+        {
+          "id": "camera",
+          "name": "小相機",
+          "kind": "camera",
+          "w": 0.95,
+          "d": 0.64,
+          "h": 0.7,
+          "color": "#efbca5",
+          "initial": {
+            "surface": "box",
+            "x": 7.23,
+            "y": 4.78
+          },
+          "story": "相機的背帶裡夾著一張合照。照片中的橘白貓，坐在街角花店門口。"
+        },
+        {
+          "id": "book",
+          "name": "草綠手帳",
+          "kind": "book",
+          "w": 0.72,
+          "d": 0.95,
+          "h": 0.13,
+          "color": "#a9bd91",
+          "initial": {
+            "surface": "box",
+            "x": 8.24,
+            "y": 5
+          },
+          "story": "第一頁只寫了「搬來的第一天」。後面的日子，還空著。"
+        },
+        {
+          "id": "mug",
+          "name": "奶油馬克杯",
+          "kind": "mug",
+          "w": 0.55,
+          "d": 0.55,
+          "h": 0.64,
+          "color": "#f7e4b6",
+          "initial": {
+            "surface": "box",
+            "x": 7.35,
+            "y": 5.61
+          },
+          "story": "房東多留了一只杯子：「以後有朋友來，就用得上。」"
+        },
+        {
+          "id": "plant",
+          "name": "小盆栽",
+          "kind": "plant",
+          "w": 0.64,
+          "d": 0.64,
+          "h": 1.04,
+          "color": "#93ad82",
+          "initial": {
+            "surface": "box",
+            "x": 8.1,
+            "y": 5.69
+          },
+          "story": "窗邊的新住戶。葉子還帶著花店貼上的小標籤。"
+        },
+        {
+          "id": "tin",
+          "name": "小寶物盒",
+          "kind": "tin",
+          "w": 0.84,
+          "d": 0.61,
+          "h": 0.35,
+          "color": "#aac9d0",
+          "initial": {
+            "surface": "box",
+            "x": 8.47,
+            "y": 4.63
+          },
+          "story": "裝著鑰匙、鈕扣，還有一個不知道配哪扇門的鑰匙圈。"
+        },
+        {
+          "id": "letter",
+          "name": "一封來信",
+          "kind": "letter",
+          "w": 0.92,
+          "d": 0.54,
+          "h": 0.045,
+          "color": "#f4dfc0",
+          "initial": {
+            "surface": "box",
+            "x": 8.38,
+            "y": 5.7
+          },
+          "story": "「奶油如果在箱子裡，先讓牠睡。東西晚一點整理也沒關係。」"
+        },
+        {
+          "id": "blanket",
+          "name": "折好的毯子",
+          "kind": "cloth",
+          "w": 1.05,
+          "d": 0.8,
+          "h": 0.15,
+          "color": "#c7baaa",
+          "story": "洗過的毯子有太陽的味道。放在哪裡，都可以是休息的地方。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.6000000000000005
+          }
+        }
+      ],
+      "ending": "奶油繞了一圈，又回到空箱裡。這間新房間，已經有另一個住戶了。",
+      "clue": "相機裡的舊合照，指向街角那間花店。",
+      "next": "去花店幫忙",
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "書桌",
+          "x": 1.1,
+          "y": 1.4,
+          "w": 4.3,
+          "d": 2.15,
+          "z": 1.62,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "下層架",
+          "x": 6.85,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.08,
+          "z": 1,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "上層架",
+          "x": 6.85,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.08,
+          "z": 2.4,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "小抽屜",
+          "x": 1.5,
+          "y": 3.6,
+          "w": 1.7,
+          "d": 1.05,
+          "z": 1.08,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "地毯",
+          "x": 2.4,
+          "y": 4.65,
+          "w": 3.25,
+          "d": 2.6,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "搬家箱",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ],
+      "reactions": {
+        "camera": {
+          "memory": "camera",
+          "text": "奶油好奇地看著相機。照片裡的花店，牠好像很熟悉。"
+        },
+        "blanket": {
+          "memory": "blanket",
+          "text": "毯子放好了。奶油探出頭看了一眼，這裡也可以是午睡的地方。"
+        }
+      }
+    },
+    {
+      "id": "flowers",
+      "number": "02",
+      "title": "花店的窗邊",
+      "place": "街角花店",
+      "subtitle": "替重新開門的小店，留一個曬太陽的位置。",
+      "author": "花店老闆的委託",
+      "letter": "明天要重新開門了。那條舊毛巾請留著，芝麻用了好多年。",
+      "cat": "sesame",
+      "layout": {
+        "desk": {
+          "x": 1.6,
+          "y": 3,
+          "w": 3.8,
+          "d": 1.65,
+          "z": 1.45
+        },
+        "drawer": {
+          "x": 0.4,
+          "y": 1.4,
+          "w": 1.3,
+          "d": 2.1,
+          "z": 1.1
+        },
+        "shelf-low": {
+          "x": 6.6,
+          "y": 0.65,
+          "w": 2.55,
+          "d": 1.2,
+          "z": 0.9
+        },
+        "shelf-high": {
+          "x": 6.6,
+          "y": 0.65,
+          "w": 2.55,
+          "d": 1.2,
+          "z": 1.95
+        },
+        "floor": {
+          "x": 2.2,
+          "y": 5.3,
+          "w": 3.4,
+          "d": 2.1,
+          "z": 0.035
+        }
+      },
+      "surfaceNames": {
+        "desk": "工作桌",
+        "shelf-low": "矮層架",
+        "shelf-high": "花架",
+        "drawer": "窗邊長凳",
+        "floor": "窗邊地墊",
+        "box": "備品箱"
+      },
+      "items": [
+        {
+          "id": "flowers",
+          "name": "一束小花",
+          "kind": "flowers",
+          "w": 0.68,
+          "d": 0.68,
+          "h": 1.1,
+          "color": "#dfa29f",
+          "story": "芝麻小時候會追緞帶，現在只負責看大家包花。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "vase",
+          "name": "玻璃花瓶",
+          "kind": "vase",
+          "w": 0.6,
+          "d": 0.6,
+          "h": 0.86,
+          "color": "#b9d3ca",
+          "story": "瓶底還貼著開店那年留下的標籤。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "watering",
+          "name": "澆水壺",
+          "kind": "watering",
+          "w": 0.95,
+          "d": 0.68,
+          "h": 0.7,
+          "color": "#a7b7a1",
+          "story": "握把磨得光滑。每天澆花的人，已經用了好多年。",
+          "initial": {
+            "surface": "box",
+            "x": 8.450000000000001,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "seeds",
+          "name": "種子罐",
+          "kind": "tin",
+          "w": 0.6,
+          "d": 0.56,
+          "h": 0.46,
+          "color": "#d9c28b",
+          "story": "「等秋天到了，再種一盆給隔壁書店。」",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "ribbon",
+          "name": "緞帶盒",
+          "kind": "tin",
+          "w": 0.86,
+          "d": 0.66,
+          "h": 0.3,
+          "color": "#dbb1a6",
+          "story": "有些緞帶剪得特別短，是以前陪芝麻玩的那幾條。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "orders",
+          "name": "訂單簿",
+          "kind": "book",
+          "w": 0.72,
+          "d": 0.92,
+          "h": 0.13,
+          "color": "#acb7a3",
+          "story": "最新一筆訂單來自舊書店：一束不用太華麗的小花。",
+          "initial": {
+            "surface": "box",
+            "x": 8.56,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "photo",
+          "name": "街坊合照",
+          "kind": "frame",
+          "w": 0.92,
+          "d": 0.38,
+          "h": 0.83,
+          "color": "#ceb08e",
+          "story": "年輕的芝麻坐在前排。照片後方，是街角的舊書店。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.779999999999999
+          }
+        },
+        {
+          "id": "towel",
+          "name": "芝麻的舊毛巾",
+          "kind": "cloth",
+          "w": 1.05,
+          "d": 0.82,
+          "h": 0.15,
+          "color": "#cbbba1",
+          "story": "邊角有一點磨損。芝麻認得這個味道，放在哪裡牠都會找到。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.58
+          }
+        }
+      ],
+      "ending": "芝麻在舊毛巾上趴下。門口的奶油也安靜了，花店明天又要開門了。",
+      "clue": "相框裡的芝麻，比現在年輕很多。牠一直陪著這條街。",
+      "next": "去舊書店看看",
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "工作桌",
+          "x": 1.6,
+          "y": 3,
+          "w": 3.8,
+          "d": 1.65,
+          "z": 1.45,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "矮層架",
+          "x": 6.6,
+          "y": 0.65,
+          "w": 2.55,
+          "d": 1.2,
+          "z": 0.9,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "花架",
+          "x": 6.6,
+          "y": 0.65,
+          "w": 2.55,
+          "d": 1.2,
+          "z": 1.95,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "窗邊長凳",
+          "x": 0.4,
+          "y": 1.4,
+          "w": 1.3,
+          "d": 2.1,
+          "z": 1.1,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "窗邊地墊",
+          "x": 2.2,
+          "y": 5.3,
+          "w": 3.4,
+          "d": 2.1,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "備品箱",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ],
+      "reactions": {
+        "photo": {
+          "memory": "photo",
+          "text": "相框安置好了。照片裡年輕的芝麻，和現在一樣喜歡曬太陽。"
+        },
+        "towel": {
+          "memory": "towel",
+          "text": "芝麻認出了舊毛巾的味道，慢慢往這邊靠近。"
+        }
+      }
+    },
+    {
+      "id": "books",
+      "number": "03",
+      "title": "書架後的一雙眼睛",
+      "place": "巷口舊書店",
+      "subtitle": "慢慢整理，給怕生的小住戶一點時間。",
+      "author": "書店店主的委託",
+      "letter": "書可以照你喜歡的方式放。若聽到架子後有聲音，輕一點就好。",
+      "cat": "ink",
+      "layout": {
+        "desk": {
+          "x": 3.1,
+          "y": 4,
+          "w": 3.15,
+          "d": 1.6,
+          "z": 1.2
+        },
+        "drawer": {
+          "x": 0.7,
+          "y": 2,
+          "w": 1.4,
+          "d": 2.35,
+          "z": 0.72
+        },
+        "shelf-low": {
+          "x": 6.45,
+          "y": 0.65,
+          "w": 2.85,
+          "d": 1.3,
+          "z": 0.95
+        },
+        "shelf-high": {
+          "x": 6.45,
+          "y": 0.65,
+          "w": 2.85,
+          "d": 1.3,
+          "z": 2.25
+        },
+        "floor": {
+          "x": 1.35,
+          "y": 5.15,
+          "w": 3.45,
+          "d": 2.2,
+          "z": 0.035
+        }
+      },
+      "surfaceNames": {
+        "desk": "閱讀桌",
+        "shelf-low": "低書架",
+        "shelf-high": "上層書架",
+        "drawer": "閱讀長凳",
+        "floor": "閱讀角",
+        "box": "舊書箱"
+      },
+      "items": [
+        {
+          "id": "stack",
+          "name": "待整理的書",
+          "kind": "books",
+          "w": 0.88,
+          "d": 0.8,
+          "h": 0.45,
+          "color": "#a8b39c",
+          "story": "書角有小小的壓痕。有人常在這疊書旁邊午睡。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "bookend",
+          "name": "木頭書擋",
+          "kind": "bookend",
+          "w": 0.55,
+          "d": 0.65,
+          "h": 0.67,
+          "color": "#c6a988",
+          "story": "店主自己磨的木頭書擋，摸起來沒有尖角。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "light",
+          "name": "閱讀燈",
+          "kind": "light",
+          "w": 0.62,
+          "d": 0.62,
+          "h": 1,
+          "color": "#e3c898",
+          "story": "晚上打烊前，店主總會多留一盞燈。",
+          "initial": {
+            "surface": "box",
+            "x": 8.56,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "tea",
+          "name": "店主的茶杯",
+          "kind": "mug",
+          "w": 0.55,
+          "d": 0.55,
+          "h": 0.64,
+          "color": "#cbd5bf",
+          "story": "茶杯旁邊以前有一只小碟子，現在留給了墨墨。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "marks",
+          "name": "書籤盒",
+          "kind": "tin",
+          "w": 0.76,
+          "d": 0.55,
+          "h": 0.28,
+          "color": "#b8becd",
+          "story": "書籤上的小花，是花店老闆畫的。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "cushion",
+          "name": "柔軟的坐墊",
+          "kind": "cloth",
+          "w": 1.06,
+          "d": 0.85,
+          "h": 0.23,
+          "color": "#b8c5bf",
+          "story": "不用放得特別整齊。找一個你覺得舒服的位置就好。",
+          "initial": {
+            "surface": "box",
+            "x": 8.34,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "album",
+          "name": "街角舊相冊",
+          "kind": "book",
+          "w": 0.85,
+          "d": 1,
+          "h": 0.2,
+          "color": "#cda795",
+          "story": "同一條街、不同年份的貓。最後一頁留白，等著新的合照。",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.4
+          }
+        },
+        {
+          "id": "returns",
+          "name": "待歸還的書袋",
+          "kind": "bag",
+          "w": 0.82,
+          "d": 0.68,
+          "h": 0.8,
+          "color": "#dfcfac",
+          "story": "袋子上寫著花店的名字。原來大家的生活一直連在一起。",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.720000000000001
+          }
+        }
+      ],
+      "ending": "墨墨終於走出書架，在坐墊旁休息。奶油趴在門口，誰都沒有催牠。",
+      "clue": "「下次把現在的牠們也拍進去吧。」店主把相冊的最後一頁留給你。雨聲漸漸傳來，先到轉角咖啡店等一等。",
+      "next": "去咖啡店避雨",
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "閱讀桌",
+          "x": 3.1,
+          "y": 4,
+          "w": 3.15,
+          "d": 1.6,
+          "z": 1.2,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "低書架",
+          "x": 6.45,
+          "y": 0.65,
+          "w": 2.85,
+          "d": 1.3,
+          "z": 0.95,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "上層書架",
+          "x": 6.45,
+          "y": 0.65,
+          "w": 2.85,
+          "d": 1.3,
+          "z": 2.25,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "閱讀長凳",
+          "x": 0.7,
+          "y": 2,
+          "w": 1.4,
+          "d": 2.35,
+          "z": 0.72,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "閱讀角",
+          "x": 1.35,
+          "y": 5.15,
+          "w": 3.45,
+          "d": 2.2,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "舊書箱",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ],
+      "reactions": {
+        "light": {
+          "memory": "light",
+          "text": "閱讀角有了暖暖的燈。書架後的小尾巴，輕輕動了一下。"
+        },
+        "cushion": {
+          "memory": "cushion",
+          "text": "墨墨看了看新坐墊。留一點距離，牠會自己過來。"
+        }
+      }
+    },
+    {
+      "id": "cafe",
+      "number": "04",
+      "title": "雨停以前的窗邊",
+      "place": "轉角咖啡店",
+      "subtitle": "雨還沒停，先替晚到的人留一個座位。",
+      "author": "咖啡店主的便條",
+      "letter": "書店說想替街坊拍一張新合照。先幫我把下午茶的小物收好吧，雨停了再一起出門。",
+      "cat": "sesame",
+      "restItem": "cafe-mat",
+      "catStart": {
+        "x": 1.2,
+        "y": 5.8,
+        "z": 0.02
+      },
+      "visitors": [
+        {
+          "id": "cream",
+          "pose": "sit",
+          "x": 8.7,
+          "y": 7.1,
+          "z": 0.02,
+          "appearAt": 3
+        }
+      ],
+      "catProgress": {
+        "peekAt": 0,
+        "sitAt": 0,
+        "hidden": "窗簾後傳來輕輕的呼吸聲。",
+        "peek": "芝麻正看著窗上的雨點。",
+        "sit": "芝麻坐在窗邊，等熟悉的收音機響起。",
+        "rest": "芝麻在杯墊旁瞇起眼睛，今天可以慢慢來。",
+        "sleep": "雨停了，芝麻卻還捨不得離開這個暖暖的位置。"
+      },
+      "layout": {
+        "desk": {
+          "x": 1.2,
+          "y": 2.6,
+          "w": 4.5,
+          "d": 1.9,
+          "z": 1.5
+        },
+        "drawer": {
+          "x": 0.45,
+          "y": 4.7,
+          "w": 1.45,
+          "d": 1.7,
+          "z": 0.65
+        },
+        "shelf-low": {
+          "x": 6.65,
+          "y": 0.7,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 0.95
+        },
+        "shelf-high": {
+          "x": 6.65,
+          "y": 0.7,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 2.05
+        },
+        "floor": {
+          "x": 2.6,
+          "y": 5.1,
+          "w": 3.5,
+          "d": 2.2,
+          "z": 0.035
+        }
+      },
+      "surfaceNames": {
+        "desk": "咖啡長桌",
+        "drawer": "窗邊座椅",
+        "shelf-low": "備品櫃",
+        "shelf-high": "杯盤架",
+        "floor": "窗前地墊",
+        "box": "下午茶箱"
+      },
+      "items": [
+        {
+          "id": "teapot",
+          "name": "慢慢泡的茶壺",
+          "kind": "teapot",
+          "w": 0.95,
+          "d": 0.7,
+          "h": 0.75,
+          "color": "#c4d1ba",
+          "story": "壺嘴有一道淡淡的茶色。店主說，多等一會兒，味道才會剛剛好。",
+          "shortName": "慢泡茶壺",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "guest-cup",
+          "name": "留給朋友的杯子",
+          "kind": "mug",
+          "w": 0.55,
+          "d": 0.55,
+          "h": 0.64,
+          "color": "#efd9b0",
+          "story": "新房間裡多留的那只杯子，今天終於等到一起喝茶的人。",
+          "shortName": "朋友的杯子",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "cookies",
+          "name": "剛烤好的餅乾",
+          "kind": "cookie",
+          "w": 0.92,
+          "d": 0.68,
+          "h": 0.22,
+          "color": "#d7b780",
+          "story": "店主多烤了一小盤。「拍合照之前，大家先吃點東西。」",
+          "shortName": "午後餅乾",
+          "initial": {
+            "surface": "box",
+            "x": 8.48,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "radio",
+          "name": "有沙沙聲的收音機",
+          "kind": "radio",
+          "w": 1,
+          "d": 0.55,
+          "h": 0.65,
+          "color": "#b8a68c",
+          "story": "雨聲裡混著老歌。芝麻年輕時，也常在這段旋律旁睡著。",
+          "shortName": "老收音機",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "menu",
+          "name": "翻舊的菜單本",
+          "kind": "book",
+          "w": 0.74,
+          "d": 0.95,
+          "h": 0.14,
+          "color": "#a3b49a",
+          "story": "最後一頁寫著街坊的口味，沒有價錢。花店少糖，書店要熱一點。",
+          "shortName": "舊菜單本",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "invitation",
+          "name": "一張手寫邀請卡",
+          "kind": "letter",
+          "w": 0.92,
+          "d": 0.54,
+          "h": 0.045,
+          "color": "#eddfc4",
+          "story": "「雨停後，到小庭院拍照。」背面有人補了一句：屋頂的布旗還沒收。",
+          "shortName": "手寫邀請卡",
+          "initial": {
+            "surface": "box",
+            "x": 8.48,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "cafe-mat",
+          "name": "曬過太陽的杯墊布",
+          "kind": "cloth",
+          "w": 1.02,
+          "d": 0.8,
+          "h": 0.15,
+          "color": "#c8b6a0",
+          "story": "原本墊在茶盤下。芝麻認定，這個大小也很適合自己。",
+          "shortName": "杯墊布",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.6000000000000005
+          }
+        },
+        {
+          "id": "bread-basket",
+          "name": "空了一半的麵包籃",
+          "kind": "basket",
+          "w": 1,
+          "d": 0.76,
+          "h": 0.53,
+          "color": "#c6a477",
+          "story": "籃底壓著兩枚木夾子。店主託你帶到屋頂，順便把布旗收下來。",
+          "shortName": "麵包籃",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.640000000000001
+          }
+        }
+      ],
+      "reactions": {
+        "radio": {
+          "memory": "radio",
+          "text": "老歌響起時，芝麻的耳朵轉了一下。這首歌，牠好像一直記得。"
+        },
+        "cafe-mat": {
+          "memory": "cafe",
+          "text": "杯墊布放好了。芝麻踩了兩下，把雨天也踩得柔軟了一點。"
+        }
+      },
+      "ending": "最後一滴雨從窗沿落下。芝麻伸了個懶腰，奶油已經在門口等你。",
+      "clue": "店主把木夾子放進空籃子：「先去屋頂吧，布旗還帶著太陽的味道。」",
+      "next": "去屋頂收布旗",
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "咖啡長桌",
+          "x": 1.2,
+          "y": 2.6,
+          "w": 4.5,
+          "d": 1.9,
+          "z": 1.5,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "備品櫃",
+          "x": 6.65,
+          "y": 0.7,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 0.95,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "杯盤架",
+          "x": 6.65,
+          "y": 0.7,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 2.05,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "窗邊座椅",
+          "x": 0.45,
+          "y": 4.7,
+          "w": 1.45,
+          "d": 1.7,
+          "z": 0.65,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "窗前地墊",
+          "x": 2.6,
+          "y": 5.1,
+          "w": 3.5,
+          "d": 2.2,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "下午茶箱",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ]
+    },
+    {
+      "id": "rooftop",
+      "number": "05",
+      "title": "風把午後吹乾了",
+      "place": "公寓屋頂",
+      "subtitle": "替晾乾的小物找個家，讓風慢慢經過。",
+      "author": "屋頂住戶的委託",
+      "letter": "布旗乾了，請幫忙收好，晚點帶到庭院。墨墨若跟上來，留一塊軟墊就好，不用催牠靠近。",
+      "cat": "ink",
+      "restItem": "sun-mat",
+      "catStart": {
+        "x": 7,
+        "y": 2.1,
+        "z": 0.02
+      },
+      "visitors": [
+        {
+          "id": "cream",
+          "pose": "sleep",
+          "x": 1.3,
+          "y": 6.8,
+          "z": 0.02,
+          "appearAt": 4
+        }
+      ],
+      "catProgress": {
+        "peekAt": 0,
+        "sitAt": 3,
+        "hidden": "花盆後，藏著一小截黑色尾巴。",
+        "peek": "墨墨跟上屋頂了。牠先在花盆旁聽聽風聲。",
+        "sit": "墨墨走出陰影，第一次在你面前望向遠處。",
+        "rest": "墨墨聞過軟墊，把前腳留在了陽光裡。",
+        "sleep": "墨墨在風聲裡睡著了。這次，牠沒有躲回去。"
+      },
+      "layout": {
+        "desk": {
+          "x": 1.4,
+          "y": 3,
+          "w": 3.9,
+          "d": 1.8,
+          "z": 1.1
+        },
+        "drawer": {
+          "x": 0.6,
+          "y": 1,
+          "w": 1.4,
+          "d": 2.25,
+          "z": 0.68
+        },
+        "shelf-low": {
+          "x": 6.5,
+          "y": 0.75,
+          "w": 2.7,
+          "d": 1.35,
+          "z": 0.8
+        },
+        "shelf-high": {
+          "x": 6.5,
+          "y": 0.75,
+          "w": 2.7,
+          "d": 1.35,
+          "z": 1.65
+        },
+        "floor": {
+          "x": 2.1,
+          "y": 5,
+          "w": 3.7,
+          "d": 2.25,
+          "z": 0.035
+        }
+      },
+      "surfaceNames": {
+        "desk": "收衣工作台",
+        "drawer": "低木凳",
+        "shelf-low": "育苗層架",
+        "shelf-high": "曬物架",
+        "floor": "向陽軟墊區",
+        "box": "曬乾的小物"
+      },
+      "items": [
+        {
+          "id": "watering",
+          "name": "裝了半壺水的澆水壺",
+          "kind": "watering",
+          "w": 0.95,
+          "d": 0.68,
+          "h": 0.7,
+          "color": "#a8b99b",
+          "story": "花店送來的壺。壺底用鉛筆寫著：等土乾了，再慢慢澆。",
+          "shortName": "澆水壺",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "seedling",
+          "name": "準備送人的小苗",
+          "kind": "plant",
+          "w": 0.68,
+          "d": 0.68,
+          "h": 1.04,
+          "color": "#96ae82",
+          "story": "種子來自芝麻看守的花店。等葉子再長大一點，就搬去書店窗邊。",
+          "shortName": "小樹苗",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "windchime",
+          "name": "聲音很輕的風鈴",
+          "kind": "windchime",
+          "w": 0.56,
+          "d": 0.56,
+          "h": 1.02,
+          "color": "#b8c9c5",
+          "story": "風大的時候反而不太響。只有你停下來，才聽得見那一聲。",
+          "shortName": "風鈴",
+          "initial": {
+            "surface": "box",
+            "x": 8.56,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "laundry-basket",
+          "name": "收衣服的小籃子",
+          "kind": "basket",
+          "w": 1,
+          "d": 0.76,
+          "h": 0.53,
+          "color": "#cbb28e",
+          "story": "咖啡店的籃子剛好裝得下布旗。奶油已經先試坐過了。",
+          "shortName": "收衣籃",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "sun-mat",
+          "name": "留在陽光裡的軟墊",
+          "kind": "cloth",
+          "w": 1.04,
+          "d": 0.82,
+          "h": 0.18,
+          "color": "#b9c8c0",
+          "story": "不是為了讓墨墨出來才放的。只是覺得，這裡很適合休息。",
+          "shortName": "向陽軟墊",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "pegs",
+          "name": "兩枚木夾子的小盒",
+          "kind": "tin",
+          "w": 0.74,
+          "d": 0.58,
+          "h": 0.28,
+          "color": "#d4c09a",
+          "story": "一枚夾住旗子，一枚夾住被風吹翻的日記。少一枚，也總有人願意借。",
+          "shortName": "木夾小盒",
+          "initial": {
+            "surface": "box",
+            "x": 8.56,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "weather-book",
+          "name": "記風向的手帳",
+          "kind": "book",
+          "w": 0.76,
+          "d": 0.96,
+          "h": 0.14,
+          "color": "#afbfca",
+          "story": "今天那一格畫了三隻貓，旁邊只寫了：雨後，適合拍照。",
+          "shortName": "風向手帳",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.44
+          }
+        },
+        {
+          "id": "banner",
+          "name": "曬乾的街角布旗",
+          "kind": "cloth",
+          "w": 1.04,
+          "d": 0.74,
+          "h": 0.12,
+          "color": "#d2b4a7",
+          "story": "布旗上的每一塊顏色都來自不同住戶。縫線有點歪，掛起來卻很好看。",
+          "shortName": "街角布旗",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.66
+          }
+        }
+      ],
+      "reactions": {
+        "windchime": {
+          "memory": "wind",
+          "text": "風鈴輕輕響了一聲。墨墨沒有退後，反而把耳朵轉向你。"
+        },
+        "sun-mat": {
+          "memory": "sun",
+          "text": "軟墊放好了。墨墨把一隻前腳放進陽光，再慢慢放進另一隻。"
+        }
+      },
+      "ending": "布旗收好了，手帳也沒有再被風吹翻。你走向樓梯時，墨墨隔了一小段距離跟上來。",
+      "clue": "庭院裡已經傳來擺杯子的聲音。這次合照，也許不會少任何一個住戶。",
+      "next": "到庭院拍合照",
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "收衣工作台",
+          "x": 1.4,
+          "y": 3,
+          "w": 3.9,
+          "d": 1.8,
+          "z": 1.1,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "育苗層架",
+          "x": 6.5,
+          "y": 0.75,
+          "w": 2.7,
+          "d": 1.35,
+          "z": 0.8,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "曬物架",
+          "x": 6.5,
+          "y": 0.75,
+          "w": 2.7,
+          "d": 1.35,
+          "z": 1.65,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "低木凳",
+          "x": 0.6,
+          "y": 1,
+          "w": 1.4,
+          "d": 2.25,
+          "z": 0.68,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "向陽軟墊區",
+          "x": 2.1,
+          "y": 5,
+          "w": 3.7,
+          "d": 2.25,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "曬乾的小物",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ]
+    },
+    {
+      "id": "courtyard",
+      "number": "06",
+      "title": "相冊裡的今天",
+      "place": "街角小庭院",
+      "subtitle": "把大家帶來的小物放好，也替今天留一個位置。",
+      "author": "街坊一起留下的便條",
+      "letter": "桌子不用排得一樣，杯子也不用成套。等你整理好了，我們就拍照；拍完還可以繼續坐一會兒。",
+      "cat": "cream",
+      "restItem": "picnic-mat",
+      "catStart": {
+        "x": 4.9,
+        "y": 6.6,
+        "z": 0.02
+      },
+      "visitors": [
+        {
+          "id": "sesame",
+          "pose": "sit",
+          "x": 2.3,
+          "y": 6.7,
+          "z": 0.02,
+          "appearAt": 0
+        },
+        {
+          "id": "ink",
+          "pose": "peek",
+          "x": 7,
+          "y": 3,
+          "z": 0.02,
+          "appearAt": 0,
+          "settleAt": 4,
+          "settledPose": "sit"
+        }
+      ],
+      "catProgress": {
+        "peekAt": 0,
+        "sitAt": 0,
+        "hidden": "空箱子裡，傳來熟悉的窸窣聲。",
+        "peek": "奶油先到了，正在替大家巡視位置。",
+        "sit": "奶油在桌邊等著，芝麻與墨墨也都來了。",
+        "rest": "奶油踩上毯子。這次，身邊不只是一個空箱子。",
+        "sleep": "快門聲過後，奶油放心睡了。今天的照片裡，三隻貓都在。"
+      },
+      "layout": {
+        "desk": {
+          "x": 1.1,
+          "y": 2.6,
+          "w": 5.1,
+          "d": 2.1,
+          "z": 1.2
+        },
+        "drawer": {
+          "x": 0.45,
+          "y": 0.9,
+          "w": 1.4,
+          "d": 2.2,
+          "z": 0.65
+        },
+        "shelf-low": {
+          "x": 6.8,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 0.85
+        },
+        "shelf-high": {
+          "x": 6.8,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 1.8
+        },
+        "floor": {
+          "x": 2,
+          "y": 5.2,
+          "w": 4.1,
+          "d": 2.3,
+          "z": 0.035
+        }
+      },
+      "surfaceNames": {
+        "desk": "街坊長桌",
+        "drawer": "樹蔭長凳",
+        "shelf-low": "花盆矮架",
+        "shelf-high": "紀念展示架",
+        "floor": "合照前的小毯子",
+        "box": "大家帶來的小物"
+      },
+      "items": [
+        {
+          "id": "camera",
+          "name": "第一天帶來的小相機",
+          "kind": "camera",
+          "w": 0.95,
+          "d": 0.64,
+          "h": 0.7,
+          "color": "#efbca5",
+          "story": "搬來那天，它裝著一張舊合照。今天，鏡頭終於轉向了現在。",
+          "shortName": "小相機",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "album",
+          "name": "留著最後一頁的相冊",
+          "kind": "book",
+          "w": 0.85,
+          "d": 1,
+          "h": 0.2,
+          "color": "#cda795",
+          "story": "書店店主把它帶來了。最後一頁的角落，已經寫好今天的日期。",
+          "shortName": "街角相冊",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "today-photo",
+          "name": "等一張照片的小相框",
+          "kind": "frame",
+          "w": 0.92,
+          "d": 0.38,
+          "h": 0.83,
+          "color": "#ceb08e",
+          "story": "先替空相框找個位置。等你按下「今天收好了」，這裡就會多一張新的合照。",
+          "motif": "blank",
+          "reveal_on_complete": "cats",
+          "completedName": "今天的合照",
+          "completedStory": "奶油打了呵欠，芝麻瞇著眼，墨墨的一隻耳朵朝向鏡頭。沒有人要求重拍。這就是大家一起度過的今天。",
+          "shortName": "留白相框",
+          "initial": {
+            "surface": "box",
+            "x": 8.48,
+            "y": 4.68
+          }
+        },
+        {
+          "id": "sharing-cup",
+          "name": "留給晚到朋友的杯子",
+          "kind": "mug",
+          "w": 0.55,
+          "d": 0.55,
+          "h": 0.64,
+          "color": "#f7e4b6",
+          "story": "那只一直多留著的杯子，現在不用再猜會是誰來用了。",
+          "shortName": "朋友的杯子",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "picnic-mat",
+          "name": "大家都能坐的毯子",
+          "kind": "cloth",
+          "w": 1.04,
+          "d": 0.82,
+          "h": 0.18,
+          "color": "#c6bbaa",
+          "story": "新房間裡那條有太陽味道的毯子，今天攤到了街坊之間。",
+          "shortName": "街坊毯子",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "street-flowers",
+          "name": "花店帶來的小花",
+          "kind": "flowers",
+          "w": 0.68,
+          "d": 0.68,
+          "h": 1.1,
+          "color": "#dda8a5",
+          "story": "不用太華麗。和街角的每一天一樣，看見就會想笑一下。",
+          "shortName": "花店小花",
+          "initial": {
+            "surface": "box",
+            "x": 8.56,
+            "y": 5.2299999999999995
+          }
+        },
+        {
+          "id": "round-cookies",
+          "name": "留到最後的餅乾",
+          "kind": "cookie",
+          "w": 0.94,
+          "d": 0.7,
+          "h": 0.22,
+          "color": "#d9b97e",
+          "story": "咖啡店主說，碎掉的也很好吃。拍照時，不用每個人都站得整齊。",
+          "shortName": "下午茶餅乾",
+          "initial": {
+            "surface": "box",
+            "x": 7.12,
+            "y": 5.7
+          }
+        },
+        {
+          "id": "old-radio",
+          "name": "唱著老歌的收音機",
+          "kind": "radio",
+          "w": 1,
+          "d": 0.55,
+          "h": 0.65,
+          "color": "#baa78d",
+          "story": "那首歌從咖啡店跟到了庭院。芝麻聽見前奏，就知道可以安心待著。",
+          "shortName": "老收音機",
+          "initial": {
+            "surface": "box",
+            "x": 7.84,
+            "y": 5.779999999999999
+          }
+        }
+      ],
+      "reactions": {
+        "camera": {
+          "memory": "together",
+          "text": "相機放好了。奶油看了看鏡頭，又看了看身邊的兩位鄰居。"
+        },
+        "picnic-mat": {
+          "memory": "picnic",
+          "text": "毯子放好了。奶油先踩了一角，也替別人留下了一角。"
+        }
+      },
+      "ending": "快門響起時，奶油剛好打了個呵欠，芝麻瞇著眼，墨墨只有一隻耳朵朝向鏡頭。沒有人要求重拍。",
+      "clue": "相冊的最後一頁，終於有了今天的合照。旁邊還留著一點空白，給下一個平凡的日子。",
+      "next": null,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "街坊長桌",
+          "x": 1.1,
+          "y": 2.6,
+          "w": 5.1,
+          "d": 2.1,
+          "z": 1.2,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "shelf-low",
+          "name": "花盆矮架",
+          "x": 6.8,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 0.85,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "shelf-high",
+          "name": "紀念展示架",
+          "x": 6.8,
+          "y": 0.65,
+          "w": 2.5,
+          "d": 1.3,
+          "z": 1.8,
+          "accepts": true,
+          "group": "shelf"
+        },
+        {
+          "id": "drawer",
+          "name": "樹蔭長凳",
+          "x": 0.45,
+          "y": 0.9,
+          "w": 1.4,
+          "d": 2.2,
+          "z": 0.65,
+          "accepts": true,
+          "group": "desk"
+        },
+        {
+          "id": "floor",
+          "name": "合照前的小毯子",
+          "x": 2,
+          "y": 5.2,
+          "w": 4.1,
+          "d": 2.3,
+          "z": 0.035,
+          "accepts": true,
+          "group": "rug"
+        },
+        {
+          "id": "box",
+          "name": "大家帶來的小物",
+          "x": 7.05,
+          "y": 4.6,
+          "w": 2.35,
+          "d": 1.8,
+          "z": 0.48,
+          "accepts": false,
+          "group": "box"
+        }
+      ]
+    },
+    {
+      "id": "small-0",
+      "number": "S1",
+      "title": "陽光下的抽屜",
+      "place": "書桌抽屜",
+      "subtitle": "把喜歡的小東西，放回剛剛好的位置。",
+      "author": "日常小品",
+      "letter": "每件小物都能有自己的位置。不用排得完美，舒服就很好。",
+      "cat": null,
+      "theme": "desk",
+      "legacy_index": 0,
+      "legacy_scale": 0.7,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "書桌抽屜",
+          "x": 0.8,
+          "y": 1.4,
+          "w": 4.199999999999999,
+          "d": 2.8,
+          "z": 1.25,
+          "accepts": true
+        },
+        {
+          "id": "box",
+          "name": "待整理的小物",
+          "x": 7,
+          "y": 4.4,
+          "w": 2.7,
+          "d": 3,
+          "z": 0.4,
+          "accepts": false
+        }
+      ],
+      "items": [
+        {
+          "id": "book",
+          "name": "草綠筆記本",
+          "kind": "book",
+          "w": 0.8959999999999999,
+          "d": 1.365,
+          "h": 0.36,
+          "color": "#b9cfad",
+          "story": "草綠筆記本，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "camera",
+          "name": "小相機",
+          "kind": "camera",
+          "w": 1.134,
+          "d": 0.9239999999999999,
+          "h": 0.65,
+          "color": "#f0c2ae",
+          "story": "小相機，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "tin",
+          "name": "收藏小鐵盒",
+          "kind": "tin",
+          "w": 0.854,
+          "d": 0.952,
+          "h": 0.36,
+          "color": "#bfd6dd",
+          "story": "收藏小鐵盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.68,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "pencils",
+          "name": "彩色鉛筆",
+          "kind": "pencils",
+          "w": 1.715,
+          "d": 0.33599999999999997,
+          "h": 0.08,
+          "color": "#f0d49c",
+          "story": "彩色鉛筆，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "letter",
+          "name": "一封來信",
+          "kind": "letter",
+          "w": 1.26,
+          "d": 0.581,
+          "h": 0.035,
+          "color": "#f1e1bf",
+          "story": "一封來信，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "glasses",
+          "name": "圓圓眼鏡",
+          "kind": "glasses",
+          "w": 1.19,
+          "d": 0.44799999999999995,
+          "h": 0.09,
+          "color": "#d4c3df",
+          "story": "圓圓眼鏡，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.51,
+            "y": 5.2
+          }
+        }
+      ],
+      "ending": "每樣小物都回家了。不用排得完美，這樣就很好。",
+      "clue": "明天，也替自己留一點慢慢整理的時間。",
+      "next": "下一個小日常"
+    },
+    {
+      "id": "small-1",
+      "number": "S2",
+      "title": "一起去野餐",
+      "place": "野餐籃",
+      "subtitle": "今天的好心情，也一起裝進籃子裡。",
+      "author": "日常小品",
+      "letter": "每件小物都能有自己的位置。不用排得完美，舒服就很好。",
+      "cat": null,
+      "theme": "picnic",
+      "legacy_index": 1,
+      "legacy_scale": 0.7,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "野餐籃",
+          "x": 0.8,
+          "y": 1.4,
+          "w": 4.199999999999999,
+          "d": 3.5,
+          "z": 1.25,
+          "accepts": true
+        },
+        {
+          "id": "box",
+          "name": "待整理的小物",
+          "x": 7,
+          "y": 4.4,
+          "w": 2.7,
+          "d": 3,
+          "z": 0.4,
+          "accepts": false
+        }
+      ],
+      "items": [
+        {
+          "id": "lunch",
+          "name": "午餐盒",
+          "kind": "lunch",
+          "w": 1.4349999999999998,
+          "d": 1.036,
+          "h": 0.36,
+          "color": "#b9cfad",
+          "story": "午餐盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "bottle",
+          "name": "檸檬水",
+          "kind": "bottle",
+          "w": 0.45499999999999996,
+          "d": 1.295,
+          "h": 0.9,
+          "color": "#bfd6dd",
+          "story": "檸檬水，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "napkin",
+          "name": "格紋餐巾",
+          "kind": "cloth",
+          "w": 1.1549999999999998,
+          "d": 0.9799999999999999,
+          "h": 0.12,
+          "color": "#f0c2ae",
+          "story": "格紋餐巾，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.545,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "apple",
+          "name": "蘋果小盒",
+          "kind": "apple",
+          "w": 0.77,
+          "d": 0.826,
+          "h": 0.36,
+          "color": "#eac1b6",
+          "story": "蘋果小盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "sandwich",
+          "name": "小小三明治",
+          "kind": "sandwich",
+          "w": 0.595,
+          "d": 0.756,
+          "h": 0.35,
+          "color": "#f0d49c",
+          "story": "小小三明治，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "fork",
+          "name": "木頭餐具",
+          "kind": "pencils",
+          "w": 1.715,
+          "d": 0.33599999999999997,
+          "h": 0.08,
+          "color": "#d4c3df",
+          "story": "木頭餐具，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.984999999999999,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "blanket",
+          "name": "野餐墊",
+          "kind": "cloth",
+          "w": 1.1549999999999998,
+          "d": 0.9799999999999999,
+          "h": 0.12,
+          "color": "#b9cfad",
+          "story": "野餐墊，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.9
+          }
+        },
+        {
+          "id": "letter",
+          "name": "野餐明信片",
+          "kind": "letter",
+          "w": 1.26,
+          "d": 0.581,
+          "h": 0.035,
+          "color": "#f1e1bf",
+          "story": "野餐明信片，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.9
+          }
+        },
+        {
+          "id": "cookie",
+          "name": "奶油餅乾",
+          "kind": "cookie",
+          "w": 0.9659999999999999,
+          "d": 0.63,
+          "h": 0.14,
+          "color": "#f0d49c",
+          "story": "奶油餅乾，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.68,
+            "y": 5.9
+          }
+        },
+        {
+          "id": "flowers",
+          "name": "一束小花",
+          "kind": "flowers",
+          "w": 1.295,
+          "d": 0.8119999999999999,
+          "h": 0.65,
+          "color": "#d4c3df",
+          "story": "一束小花，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 6.588
+          }
+        }
+      ],
+      "ending": "每樣小物都回家了。不用排得完美，這樣就很好。",
+      "clue": "明天，也替自己留一點慢慢整理的時間。",
+      "next": "下一個小日常"
+    },
+    {
+      "id": "small-2",
+      "number": "S3",
+      "title": "週末的小旅行",
+      "place": "週末行李",
+      "subtitle": "行李不多，期待卻裝得滿滿的。",
+      "author": "日常小品",
+      "letter": "每件小物都能有自己的位置。不用排得完美，舒服就很好。",
+      "cat": null,
+      "theme": "travel",
+      "legacy_index": 2,
+      "legacy_scale": 0.7,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "週末行李",
+          "x": 0.8,
+          "y": 1.4,
+          "w": 4.199999999999999,
+          "d": 3.5,
+          "z": 1.25,
+          "accepts": true
+        },
+        {
+          "id": "box",
+          "name": "待整理的小物",
+          "x": 7,
+          "y": 4.4,
+          "w": 2.7,
+          "d": 3,
+          "z": 0.4,
+          "accepts": false
+        }
+      ],
+      "items": [
+        {
+          "id": "sweater",
+          "name": "柔軟毛衣",
+          "kind": "sweater",
+          "w": 1.54,
+          "d": 1.3299999999999998,
+          "h": 0.24,
+          "color": "#b9cfad",
+          "story": "柔軟毛衣，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "camera",
+          "name": "旅行相機",
+          "kind": "camera",
+          "w": 1.134,
+          "d": 0.9239999999999999,
+          "h": 0.65,
+          "color": "#f0c2ae",
+          "story": "旅行相機，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "bottle",
+          "name": "隨身水壺",
+          "kind": "bottle",
+          "w": 0.45499999999999996,
+          "d": 1.295,
+          "h": 0.9,
+          "color": "#bfd6dd",
+          "story": "隨身水壺，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.68,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "book",
+          "name": "口袋旅遊手帳",
+          "kind": "book",
+          "w": 0.8959999999999999,
+          "d": 1.365,
+          "h": 0.36,
+          "color": "#f0d49c",
+          "story": "口袋旅遊手帳，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "shoes",
+          "name": "舒服的鞋子",
+          "kind": "shoes",
+          "w": 1.295,
+          "d": 0.9099999999999999,
+          "h": 0.4,
+          "color": "#e9c4ba",
+          "story": "舒服的鞋子，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "pouch",
+          "name": "盥洗小包",
+          "kind": "pouch",
+          "w": 0.945,
+          "d": 0.84,
+          "h": 0.36,
+          "color": "#d4c3df",
+          "story": "盥洗小包，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.68,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "letter",
+          "name": "車票與地圖",
+          "kind": "letter",
+          "w": 1.26,
+          "d": 0.581,
+          "h": 0.035,
+          "color": "#f1e1bf",
+          "story": "車票與地圖，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.9
+          }
+        }
+      ],
+      "ending": "每樣小物都回家了。不用排得完美，這樣就很好。",
+      "clue": "明天，也替自己留一點慢慢整理的時間。",
+      "next": "下一個小日常"
+    },
+    {
+      "id": "small-3",
+      "number": "S4",
+      "title": "手作的午後",
+      "place": "手作盒",
+      "subtitle": "替每一點靈感，留一個小小的家。",
+      "author": "日常小品",
+      "letter": "每件小物都能有自己的位置。不用排得完美，舒服就很好。",
+      "cat": null,
+      "theme": "craft",
+      "legacy_index": 3,
+      "legacy_scale": 0.7,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "手作盒",
+          "x": 0.8,
+          "y": 1.4,
+          "w": 4.8999999999999995,
+          "d": 3.5,
+          "z": 1.25,
+          "accepts": true
+        },
+        {
+          "id": "box",
+          "name": "待整理的小物",
+          "x": 7,
+          "y": 4.4,
+          "w": 2.7,
+          "d": 3,
+          "z": 0.4,
+          "accepts": false
+        }
+      ],
+      "items": [
+        {
+          "id": "cloth",
+          "name": "花布",
+          "kind": "cloth",
+          "w": 1.1549999999999998,
+          "d": 0.9799999999999999,
+          "h": 0.12,
+          "color": "#f0c2ae",
+          "story": "花布，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "tin",
+          "name": "鈕扣盒",
+          "kind": "tin",
+          "w": 0.854,
+          "d": 0.952,
+          "h": 0.36,
+          "color": "#bfd6dd",
+          "story": "鈕扣盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "book",
+          "name": "靈感筆記",
+          "kind": "book",
+          "w": 0.8959999999999999,
+          "d": 1.365,
+          "h": 0.36,
+          "color": "#b9cfad",
+          "story": "靈感筆記，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.68,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "pencils",
+          "name": "畫筆",
+          "kind": "pencils",
+          "w": 1.715,
+          "d": 0.33599999999999997,
+          "h": 0.08,
+          "color": "#f0d49c",
+          "story": "畫筆，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "pouch",
+          "name": "針線包",
+          "kind": "pouch",
+          "w": 0.945,
+          "d": 0.84,
+          "h": 0.36,
+          "color": "#d4c3df",
+          "story": "針線包，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "flowers",
+          "name": "乾燥小花",
+          "kind": "flowers",
+          "w": 1.295,
+          "d": 0.8119999999999999,
+          "h": 0.65,
+          "color": "#eac1b6",
+          "story": "乾燥小花，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.405,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "cookie",
+          "name": "下午茶餅乾",
+          "kind": "cookie",
+          "w": 0.9659999999999999,
+          "d": 0.63,
+          "h": 0.14,
+          "color": "#f1e1bf",
+          "story": "下午茶餅乾，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.9
+          }
+        }
+      ],
+      "ending": "每樣小物都回家了。不用排得完美，這樣就很好。",
+      "clue": "明天，也替自己留一點慢慢整理的時間。",
+      "next": "下一個小日常"
+    },
+    {
+      "id": "small-4",
+      "number": "S5",
+      "title": "新家的第一天",
+      "place": "搬家紙箱",
+      "subtitle": "把熟悉的小日子，搬進新的生活。",
+      "author": "日常小品",
+      "letter": "每件小物都能有自己的位置。不用排得完美，舒服就很好。",
+      "cat": null,
+      "theme": "home",
+      "legacy_index": 4,
+      "legacy_scale": 0.7,
+      "surfaces": [
+        {
+          "id": "desk",
+          "name": "搬家紙箱",
+          "x": 0.8,
+          "y": 1.4,
+          "w": 4.8999999999999995,
+          "d": 4.199999999999999,
+          "z": 1.25,
+          "accepts": true
+        },
+        {
+          "id": "box",
+          "name": "待整理的小物",
+          "x": 7,
+          "y": 4.4,
+          "w": 2.7,
+          "d": 3,
+          "z": 0.4,
+          "accepts": false
+        }
+      ],
+      "items": [
+        {
+          "id": "sweater",
+          "name": "最喜歡的毛衣",
+          "kind": "sweater",
+          "w": 1.54,
+          "d": 1.3299999999999998,
+          "h": 0.24,
+          "color": "#b9cfad",
+          "story": "最喜歡的毛衣，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "lunch",
+          "name": "木頭收納盒",
+          "kind": "lunch",
+          "w": 1.4349999999999998,
+          "d": 1.036,
+          "h": 0.36,
+          "color": "#f0d49c",
+          "story": "木頭收納盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "letter",
+          "name": "珍藏的信",
+          "kind": "letter",
+          "w": 1.26,
+          "d": 0.581,
+          "h": 0.035,
+          "color": "#f1e1bf",
+          "story": "珍藏的信，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.44,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "book",
+          "name": "床邊讀物",
+          "kind": "book",
+          "w": 0.8959999999999999,
+          "d": 1.365,
+          "h": 0.36,
+          "color": "#bfd6dd",
+          "story": "床邊讀物，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "pouch",
+          "name": "小熊零錢包",
+          "kind": "pouch",
+          "w": 0.945,
+          "d": 0.84,
+          "h": 0.36,
+          "color": "#f0c2ae",
+          "story": "小熊零錢包，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "camera",
+          "name": "回憶相機",
+          "kind": "camera",
+          "w": 1.134,
+          "d": 0.9239999999999999,
+          "h": 0.65,
+          "color": "#d4c3df",
+          "story": "回憶相機，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 8.565999999999999,
+            "y": 5.2
+          }
+        },
+        {
+          "id": "glasses",
+          "name": "閱讀眼鏡",
+          "kind": "glasses",
+          "w": 1.19,
+          "d": 0.44799999999999995,
+          "h": 0.09,
+          "color": "#eac1b6",
+          "story": "閱讀眼鏡，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.08,
+            "y": 5.9
+          }
+        },
+        {
+          "id": "tin",
+          "name": "小寶物盒",
+          "kind": "tin",
+          "w": 0.854,
+          "d": 0.952,
+          "h": 0.36,
+          "color": "#b9cfad",
+          "story": "小寶物盒，也是今天想好好留住的一點日常。",
+          "initial": {
+            "surface": "box",
+            "x": 7.88,
+            "y": 5.9
+          }
+        }
+      ],
+      "ending": "每樣小物都回家了。不用排得完美，這樣就很好。",
+      "clue": "明天，也替自己留一點慢慢整理的時間。",
+      "next": "下一個小日常"
+    }
+  ],
+  "cats": {
+    "cream": {
+      "name": "奶油",
+      "color": "#dfa469",
+      "accent": "#fff0d8",
+      "detail": "橘白貓 · 紙箱巡查員",
+      "habit": "空箱要留一個。牠喜歡陪人拆箱，再把箱子變成床。"
+    },
+    "sesame": {
+      "name": "芝麻",
+      "color": "#f0ddc5",
+      "accent": "#bd865f",
+      "detail": "三花貓 · 花店的老住戶",
+      "habit": "喜歡舊毛巾與午後陽光。街坊年輕時的照片裡，也找得到牠。"
+    },
+    "ink": {
+      "name": "墨墨",
+      "color": "#555b59",
+      "accent": "#858d83",
+      "detail": "黑貓 · 安靜的觀察員",
+      "habit": "先躲起來看看。願意在你面前坐下，就是牠打招呼的方式。"
+    }
+  },
+  "memories": {
+    "cream": {
+      "hello": "蹲下輕聲叫牠，奶油會慢慢眨眼。",
+      "blanket": "喜歡剛放好的毯子，但空紙箱永遠有吸引力。",
+      "camera": "對相機很好奇，差一點用鼻尖碰到鏡頭。",
+      "together": "拍合照前會先看看身邊的人，像在確認大家都到了。",
+      "picnic": "喜歡先踩毯子的一角，也會替其他鄰居留一點位置。"
+    },
+    "sesame": {
+      "hello": "聽見招呼時，芝麻會瞇起眼睛，繼續享受午後。",
+      "towel": "舊毛巾放在哪裡，牠都認得那個熟悉的味道。",
+      "photo": "相框裡那隻年輕的三花，就是陪街坊很久的芝麻。",
+      "radio": "聽見咖啡店的老歌，耳朵會先轉過去，然後才慢慢瞇眼。",
+      "cafe": "雨天喜歡靠著杯墊布等人，並不急著出門。"
+    },
+    "ink": {
+      "hello": "不伸手催牠，只輕聲打招呼，墨墨也會回你一個眨眼。",
+      "cushion": "聞過新坐墊後，願意留下來休息。",
+      "light": "閱讀燈亮著的角落，讓牠慢慢安心。",
+      "wind": "聽見輕輕的風鈴聲，願意留在原地多聽一會兒。",
+      "sun": "會先把一隻前腳放進陽光，再慢慢放進另一隻。"
+    }
+  },
+  "greetings": {
+    "cream": {
+      "hidden": null,
+      "peek": "奶油慢慢眨了眨眼。牠好像在說：這裡挺好的。",
+      "sit": "奶油慢慢眨了眨眼。牠好像在說：這裡挺好的。",
+      "sleep": "奶油慢慢眨了眨眼。牠好像在說：這裡挺好的。"
+    },
+    "sesame": {
+      "hidden": null,
+      "peek": "芝麻瞇起眼睛，尾巴輕輕繞在身邊。",
+      "sit": "芝麻瞇起眼睛，尾巴輕輕繞在身邊。",
+      "sleep": "芝麻瞇起眼睛，尾巴輕輕繞在身邊。"
+    },
+    "ink": {
+      "hidden": null,
+      "peek": "墨墨在架子後眨了一下眼，沒有再往後躲。",
+      "sit": "墨墨安靜地回了一個眨眼。你們又熟悉了一點。",
+      "sleep": "墨墨安靜地回了一個眨眼。你們又熟悉了一點。"
+    }
+  }
+}

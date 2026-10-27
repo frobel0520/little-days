@@ -1,0 +1,24 @@
+config_version=5
+
+[application]
+config/name="Little Days 3D"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0.945, 0.929, 0.886, 1)
+
+[display]
+window/size/viewport_width=1360
+window/size/viewport_height=920
+window/size/window_width_override=1360
+window/size/window_height_override=920
+window/stretch/mode="disabled"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.945, 0.929, 0.886, 1)
+textures/default_filters/use_nearest_mipmap_filter=false
+
+[input_devices]
+pointing/emulate_mouse_from_touch=true

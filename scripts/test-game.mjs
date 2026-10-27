@@ -1,0 +1,12 @@
+import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const env = { ...process.env };
+env.XDG_DATA_HOME ||= existsSync('/workspace/godot-data') ? '/workspace/godot-data' : join(tmpdir(), 'little-days-godot', 'data');
+env.XDG_CONFIG_HOME ||= join(tmpdir(), 'little-days-godot', 'config');
+env.XDG_CACHE_HOME ||= join(tmpdir(), 'little-days-godot', 'cache');
+const result = spawnSync(process.env.GODOT_BIN || 'godot', ['--headless', '--path', fileURLToPath(new URL('../game/', import.meta.url)), '--script', 'tests/verify.gd'], { stdio: 'inherit', env, timeout: 60000 });
+if (result.error) throw result.error;
+process.exit(result.status || (result.signal ? 1 : 0));

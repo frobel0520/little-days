@@ -3,3 +3,8 @@ node_modules/
 
 preview-*.png
 .wrangler/
+
+# Godot import cache and generated browser prototype
+.godot/
+prototype-build/
+game-build/
