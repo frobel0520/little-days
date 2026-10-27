@@ -1,0 +1,22 @@
+; Independent 3D feel study; does not replace the PixiJS game.
+config_version=5
+
+[application]
+config/name="Little Days · A Table in the Sun"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=860
+window/stretch/mode="disabled"
+window/size/window_width_override=1280
+window/size/window_height_override=860
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.945, 0.929, 0.886, 1)
+
+[input_devices]
+pointing/emulate_mouse_from_touch=true

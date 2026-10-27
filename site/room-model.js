@@ -1,4 +1,4 @@
-import {levels} from './levels.js';
+import {storyLevels as levels} from './levels.js';
 // All gameplay positions are continuous world coordinates. No visible or hidden snap grid.
 export const PROJECTION = { x: 43, y: 22, z: 48, originX: 480, originY: 242 };
 export function project(x, y, z = 0) { return { x: PROJECTION.originX + (x - y) * PROJECTION.x, y: PROJECTION.originY + (x + y) * PROJECTION.y - z * PROJECTION.z }; }

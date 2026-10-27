@@ -1,3 +1,4 @@
+import {secondAct} from './second-act.js';
 const homeItems = [
   { id: 'camera', name: '小相機', kind: 'camera', w: .95, d: .64, h: .7, color: '#efbca5', initial: { surface: 'box', x: 7.23, y: 4.78 } },
   { id: 'book', name: '草綠手帳', kind: 'book', w: .72, d: .95, h: .13, color: '#a9bd91', initial: { surface: 'box', x: 8.24, y: 5.0 } },
@@ -40,9 +41,12 @@ export const levels=[
    make('returns','待歸還的書袋','bag',.82,.68,.8,'#dfcfac','袋子上寫著花店的名字。原來大家的生活一直連在一起。')]),
   ending:'墨墨終於走出書架，在坐墊旁休息。奶油趴在門口，誰都沒有催牠。',clue:'「下次把現在的牠們也拍進去吧。」店主把相冊的最後一頁留給你。',next:null}
 ];
+// The archived PixiJS game keeps its original three chapters.
+export const storyLevels=[...levels.map(level=>level.id==='books'?{...level,clue:level.clue+'雨聲漸漸傳來，先到轉角咖啡店等一等。',next:'去咖啡店避雨'}:level),...secondAct];
 export function placedCount(level,state){return level.items.filter(it=>state[it.id]&&state[it.id].surface!=='box').length;}
 export function catMoment(level,state,completed=false){
  const count=placedCount(level,state),out=id=>state[id]&&state[id].surface!=='box';
+ if(level.catProgress){const p=level.catProgress;return completed?{pose:'sleep',text:p.sleep}:count<p.peekAt?{pose:'hidden',text:p.hidden}:count<p.sitAt?{pose:'peek',text:p.peek}:{pose:'sit',text:out(level.restItem)?p.rest:p.sit};}
  if(level.id==='home')return count<2?{pose:'hidden',text:'箱子裡偶爾傳來窸窣聲。'}:count<4?{pose:'peek',text:'奶油探出頭了。原來箱子裡還有一位新室友。'}:completed?{pose:'sleep',text:'奶油把空箱子當成了自己的床。'}:{pose:'sit',text:out('blanket')?'奶油找到毯子，踩了踩，正在旁邊陪你整理。':'奶油爬出箱子，正在巡視你的新房間。'};
  if(level.id==='flowers')return {pose:completed?'sleep':'sit',text:completed?'芝麻找到了舊毛巾，安安穩穩地趴下了。':out('towel')?'芝麻認得那條毛巾，正在旁邊陪你整理。':count>=3?'奶油也來了，芝麻只是輕輕甩了一下尾巴。':'芝麻坐在矮櫃旁，慢慢看著你整理。'};
  return count<4?{pose:'hidden',text:'書架後面，露出一小截黑色尾巴。'}:count<7?{pose:'peek',text:'墨墨探出耳朵，還在觀察你。'}:{pose:completed?'sleep':'sit',text:completed?'墨墨願意留在你面前休息了。':out('cushion')?'墨墨聞了聞坐墊，安靜地留在閱讀角。':'墨墨走出書架，聞了聞閱讀角的新味道。'};
