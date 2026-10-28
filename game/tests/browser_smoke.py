@@ -7,6 +7,7 @@ import json
 import math
 import os
 import sys
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get("LITTLE_DAYS_BASE_URL", "http://127.0.0.1:4317")
@@ -28,15 +29,15 @@ def reveal(page, group, key):
     for _ in range(18):
         s = state(page)
         control = s[group][key]
-        if group == "buttons":
+        if group in ("buttons", "surface_buttons"):
             assert control["visible"] and not control["disabled"], (key, control)
             return control
         scroll = s["scroll"]
-        if scroll["top"] + 20 < control["y"] < scroll["bottom"] - 20:
+        if scroll["top"] + 8 < control["y"] < scroll["bottom"] - 8:
             assert not control["disabled"], (key, control)
             return control
         page.mouse.move(scroll["x"], scroll["y"])
-        page.mouse.wheel(0, 130 if control["y"] >= scroll["bottom"] - 20 else -130)
+        page.mouse.wheel(0, 130 if control["y"] >= scroll["bottom"] - 8 else -130)
         page.wait_for_timeout(160)
     raise AssertionError(("Cannot reach control", group, key, state(page)))
 
@@ -145,6 +146,8 @@ with sync_playwright() as p:
             wait(page, "s.modal === 'completion' && s.completed")
             if chapter == "courtyard":
                 assert state(page)["revealed_items"] == ["today-photo"]
+                assert state(page)["keepsake_visible"], 'The story payoff must be visible in the completion dialog'
+                page.screenshot(path=str(Path(__file__).resolve().parents[2] / 'preview-fixed-photo-reveal.png'))
                 assert '今天的合照' in state(page)["item_buttons"]["today-photo"]["text"]
                 assert not state(page)["buttons"]["dialog_next"]["visible"]
             else:
@@ -211,9 +214,13 @@ with sync_playwright() as p:
     ready(page)
     s = state(page)
     assert s["viewport_width"] == 390
+    assert s["scroll"]["bottom"] - s["scroll"]["top"] >= 80
+    assert s["scene_rect"]["h"] >= 180
     assert s["buttons"]["finish"]["y"] < s["buttons"]["rotate"]["y"], "Mobile panel must not overlap footer"
     # Scroll controls stay usable while the full 3D room is visible above.
     place(page, "camera", "desk")
+    assert state(page)["preview_visible"] and state(page)["selection_outline"]
+    assert state(page)["surface_buttons"]["desk"]["y"] > state(page)["scroll"]["bottom"]
     original_placement = state(page)["state"]["camera"].copy()
     item = state(page)["items"]["camera"]
     client = context.new_cdp_session(page)
@@ -236,7 +243,16 @@ with sync_playwright() as p:
     assert state(page)["state"]["camera"] == before
     assert not state(page)["storage_failed"], state(page).get("storage_error")
     page.screenshot(path="/tmp/little-days-mobile.png")
-    print("PASS mobile: responsive layout, scrollable controls, touch lift/drop and drag-to-cancel")
+    print("PASS mobile: responsive layout, pinned placement controls, preview, touch lift/drop and drag-to-cancel")
+    page.set_viewport_size({"width":844,"height":390})
+    wait(page, "s.viewport_width === 844 && s.scroll.bottom - s.scroll.top >= 80")
+    assert state(page)["scene_rect"]["h"] >= 180
+    click(page,"buttons","notebook")
+    wait(page,"s.modal === 'notebook'")
+    assert state(page)["buttons"]["dialog_close"]["font_focus"].startswith("37452d")
+    click(page,"buttons","dialog_close")
+    page.screenshot(path=str(Path(__file__).resolve().parents[2] / "preview-fixed-mobile-landscape.png"))
+    print("PASS mobile: landscape reflow and readable dialog focus")
     assert not errors, errors
     print("PASS: no browser exceptions or Godot script errors")
     browser.close()

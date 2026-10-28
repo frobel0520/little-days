@@ -419,10 +419,19 @@ func room(level: Dictionary) -> Node3D:
 			var tabletop_color := "ceb08a" if level.id != "flowers" else "c1b18c"
 			if level.has("legacy_index"):
 				tabletop_color = {"desk": "cbb18b", "picnic": "c2a17a", "travel": "a7b5a0", "craft": "c4b9c6", "home": "c7ab86"}.get(level.theme, tabletop_color)
-			rounded_box(room_root, Vector3(s.w, 0.13, s.d), center - Vector3.UP * 0.07, 0.07, tabletop_color)
+			if s.id == "shelf-high":
+				tabletop_color = "c6ad89"
+				var canopy := material(tabletop_color)
+				canopy.set_meta("shelf_canopy", true)
+				canopy.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+				canopy.albedo_color.a = 1.0
+			if s.id == "shelf-high":
+				box(room_root, Vector3(s.w, 0.13, s.d), center - Vector3.UP * 0.07, tabletop_color)
+			else:
+				rounded_box(room_root, Vector3(s.w, 0.13, s.d), center - Vector3.UP * 0.07, 0.07, tabletop_color)
 			if s.id == "shelf-high":
 				for x in [-1, 1]:
-					box(room_root, Vector3(0.09, s.z, s.d), Vector3(center.x + x * s.w / 2, s.z / 2 - 0.05, center.z), "a78d69")
+					box(room_root, Vector3(0.09, s.z, s.d), Vector3(center.x + x * s.w / 2, s.z / 2 - 0.05, center.z), "c6ad89")
 			else:
 				for x in [-1, 1]:
 					for z in [-1, 1]:
