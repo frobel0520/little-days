@@ -7,6 +7,10 @@
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 
+## 2026-10-28：正式部署申請受阻
+
+Owner 明確委派後，已將測試版 `65dc104` 以非強制 fast-forward 更新到 main，並加入 main 功能推送自動提案（`2eef8ae`）及安全錯誤代碼回報（`6a5b948`）。[實際提案 run](https://github.com/frobel0520/little-days/actions/runs/40685666808) 回 **HTTP 403 (INTAKE_NOT_ALLOWED)**：Harbor 的 little-days／pages／production 接入設定不存在、停用或 repo 對應不符，未能取得 Owner 管理登入進一步區分。這次沒有正式發布，也未讀取／複製其他專案的 secret。程式與測試已完成，接入與核准須由已登入的管理端續辦，見 [接手文件](docs/harbor-activation-handoff.md)。
+
 ## 2026-10-28：部署接入、備份與場景互動
 
 已加入 Harbor release／propose workflows 與官方 Godot 工具 SHA-512 核對、版本讀回與 Functions 打包；正式 profile、供應商設定、Owner 核准及發布仍受外部權限／白名單阻擋，未部署。引擎下載由 37.7 MB 降為 9.5 MB（74.9%），有原始分片相容路徑；新增省電畫質與背景處理。加入貓咪轉頭、材質反光、九種原創合成聲與環境聲，以及不影響通關的可選物品互動。設定可匯出／匯入進度，確認前不覆寫，並保留匯入前備份供還原。
