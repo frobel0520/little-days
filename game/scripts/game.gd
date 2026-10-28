@@ -25,6 +25,8 @@ var stage: Node3D
 var room: Node3D
 var camera: Camera3D
 var ring: MeshInstance3D
+var selection_cage: Node3D
+var cat_origins: Dictionary = {}
 var dragging := false
 var drag_moved := false
 var drag_start := Vector2.ZERO
@@ -170,6 +172,7 @@ func load_chapter(index: int, save_before := true) -> void:
 	objects.clear()
 	shadows.clear()
 	cats.clear()
+	cat_origins.clear()
 	if is_instance_valid(room):
 		room.free()
 	if is_instance_valid(ring):
@@ -224,6 +227,26 @@ func load_chapter(index: int, save_before := true) -> void:
 		shadows[it.id] = shadow
 	ring = art.torus(stage, 0.46, 0.485, Vector3.ZERO, "f9e1a5")
 	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if is_instance_valid(selection_cage): selection_cage.free()
+	selection_cage = Node3D.new()
+	stage.add_child(selection_cage)
+	var outline_material := StandardMaterial3D.new()
+	outline_material.albedo_color = Color("9b7838")
+	outline_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	outline_material.no_depth_test = true
+	for axis in range(3):
+		for a in [-1, 1]:
+			for b in [-1, 1]:
+				var from := Vector3.ZERO
+				from[axis] = -0.5
+				from[(axis + 1) % 3] = a * 0.5
+				from[(axis + 2) % 3] = b * 0.5
+				var to := from
+				to[axis] = 0.5
+				art.line(selection_cage, from, to, 0.009, "9b7838")
+	for edge in selection_cage.get_children():
+		edge.material_override = outline_material
+		edge.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ui.fill_chapter(chapter, content.chapters, chapter_index)
 	sync_cats()
 	refresh()
@@ -247,6 +270,16 @@ func refresh() -> void:
 	if greeting_until > Time.get_ticks_msec():
 		ui.controls.greet.disabled = true
 	ring.visible = not selected.is_empty()
+	selection_cage.visible = ring.visible
+	# Architectural cutaway keeps the lower shelf readable without moving objects.
+	var lower_used := false
+	for p in state.values():
+		if p.surface == "shelf-low": lower_used = true
+	for part in room.get_children():
+		if part is MeshInstance3D and part.material_override.get_meta("shelf_canopy", false):
+			part.material_override.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS if lower_used else BaseMaterial3D.TRANSPARENCY_DISABLED
+			part.material_override.albedo_color.a = 0.18 if lower_used else 1.0
+			part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if lower_used else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 func choose(id: String) -> void:
 	if not objects.has(id):
@@ -281,6 +314,16 @@ func hits(screen: Vector2) -> Array[String]:
 		excluded.append(hit.rid)
 		result.append(str(hit.collider.get_meta("item")))
 	return result
+
+func touch_hits(screen: Vector2) -> Array[String]:
+	var direct := hits(screen)
+	if not direct.is_empty() or get_viewport().get_visible_rect().size.x >= 900:
+		return direct
+	var nearby: Array[String] = []
+	for offset in [Vector2(-9, 0), Vector2(9, 0), Vector2(0, -9), Vector2(0, 9), Vector2(-6, -6), Vector2(6, -6), Vector2(-6, 6), Vector2(6, 6)]:
+		for id in hits(screen + offset):
+			if not nearby.has(id): nearby.append(id)
+	return nearby
 
 func cat_at(screen: Vector2) -> String:
 	var local := local_screen(screen)
@@ -435,6 +478,9 @@ func record_encounter(id: String) -> void:
 		saved.met.append(id)
 
 func sync_cats() -> void:
+	cat_origins.clear()
+	for id in cats:
+		if cats[id].get_meta("pose") != "hidden": cat_origins[id] = cats[id].position
 	for node in cats.values():
 		node.free()
 	cats.clear()
@@ -447,6 +493,8 @@ func sync_cats() -> void:
 	if chapter.id == "home" and moment.pose in ["hidden", "peek", "sleep"]:
 		var box: Dictionary = rules.surface("box")
 		position = Vector3(box.x + box.w / 2 - 5, box.z + 0.03, box.y + box.d / 2 - 4)
+		if moment.pose == "peek":
+			position = Vector3(box.x - 5.4, 0.12, box.y + box.d - 4.1)
 	elif chapter.id == "books" and moment.pose in ["hidden", "peek"]:
 		var shelf: Dictionary = rules.surface("shelf-low")
 		position = Vector3(shelf.x - 4.5, shelf.z + 0.02, shelf.y - 3.5)
@@ -474,7 +522,9 @@ func sync_cats() -> void:
 func add_cat(id: String, pose: String, position: Vector3) -> void:
 	var node: Node3D = art.cat(content.cats[id], pose)
 	stage.add_child(node)
-	node.position = position
+	node.position = cat_origins.get(id, position)
+	if not node.position.is_equal_approx(position):
+		node.create_tween().tween_property(node, "position", position, 0.65).set_trans(Tween.TRANS_SINE)
 	node.rotation.y = -0.25
 	cats[id] = node
 	if pose != "hidden":
@@ -536,6 +586,11 @@ func finish() -> void:
 	var has_next: bool = chapter.get("next") is String and not chapter.next.is_empty()
 	ui.show_dialog("completion", "今天，也整理得好好的。", chapter.ending + "\n\n" + chapter.clue, has_next)
 	if has_next: ui.controls.dialog_next.text = chapter.next
+	for it in chapter.items:
+		if it.has("reveal_on_complete"):
+			var photo: Dictionary = it.duplicate(true)
+			photo.motif = it.reveal_on_complete
+			ui.show_keepsake(photo)
 
 func reveal_keepsakes() -> void:
 	for it in chapter.items:
@@ -607,6 +662,16 @@ func on_action(name: String, value: String) -> void:
 		"undo": undo()
 		"reset": ui.show_dialog("reset", "重新整理這個房間？", "小物會回到箱子，貓咪筆記與過往完成紀錄會保留。你也可以用「撤銷」還原。", false); ui.controls.dialog_next.text = "確定重整"; ui.controls.dialog_next.show()
 		"notebook": notebook()
+		"item_story":
+			if selected.is_empty():
+				ui.show_dialog("item", chapter.author, chapter.letter)
+			else:
+				var it: Dictionary = rules.item(selected)
+				ui.show_dialog("item", it.get("completedName", it.name) if completed else it.name, it.get("completedStory", it.story) if completed else it.story)
+				if completed and it.has("reveal_on_complete"):
+					var photo: Dictionary = it.duplicate(true)
+					photo.motif = it.reveal_on_complete
+					ui.show_keepsake(photo)
 		"greet": greet()
 		"finish": finish()
 		"dialog_close": ui.close_dialog()
@@ -655,7 +720,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if not cat_id.is_empty():
 				greet(cat_id)
 				return
-			var clicked := hits(event.position)
+			var clicked := touch_hits(event.position)
 			if not clicked.is_empty():
 				begin_drag(selected if clicked.has(selected) else clicked[0], event.position, clicked)
 			elif not selected.is_empty():
@@ -725,6 +790,9 @@ func _process(delta: float) -> void:
 		var support: Dictionary = candidate if dragging and not candidate.is_empty() else state[selected]
 		ring.position = Vector3(pos.x, rules.surface(support.surface).z + 0.02, pos.z)
 		ring.scale = Vector3(maxf(it.w, it.d) * 1.05, 0.2, maxf(it.w, it.d) * 1.05)
+		selection_cage.position = pos + Vector3.UP * (it.h / 2)
+		selection_cage.rotation.y = objects[selected].rotation.y
+		selection_cage.scale = Vector3(it.w + 0.08, maxf(it.h, 0.12) + 0.06, it.d + 0.08)
 	for id in cats:
 		var node: Node3D = cats[id]
 		node.scale.y = 1 + sin(clock * 2.0) * 0.018
@@ -760,6 +828,7 @@ func inspect() -> void:
 	result.camera = camera.position
 	result.viewport_width = get_viewport().get_visible_rect().size.x
 	result.viewport_height = get_viewport().get_visible_rect().size.y
+	result.selection_outline = selection_cage.visible
 	result.storage_failed = storage.failed
 	result.storage_error = storage.last_error
 	result.dialog_text = ui.dialog_body.text if ui.dialog.visible else ""

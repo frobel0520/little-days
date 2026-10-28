@@ -83,16 +83,35 @@ func overlap(state: Dictionary, id: String, p: Dictionary) -> float:
 
 func gentle(state: Dictionary, id: String, requested: Dictionary) -> Dictionary:
 	var best := requested.duplicate()
+	if requested.is_empty() or not surface(requested.surface).get("accepts", false): return best
 	var score := overlap(state, id, best)
-	# Search nearby without rejecting an arrangement or imposing a grid.
-	if score < 0.48:
-		return best
-	for offset in [Vector2(0.22, 0), Vector2(-0.22, 0), Vector2(0, 0.22), Vector2(0, -0.22), Vector2(0.35, 0.25), Vector2(-0.35, -0.25), Vector2(0.55, 0), Vector2(0, 0.5)]:
+	if score < 0.01: return best
+	var size := dimensions(id, int(requested.orientation))
+	var offsets: Array[Vector2] = []
+	# Continuous candidate positions come from the requested point and nearby edges.
+	# No grid, rejected placement, required slot, or movement of other objects.
+	for radius in [0.22, 0.45, 0.8, 1.2]:
+		for angle in range(12):
+			offsets.append(Vector2.from_angle(angle * TAU / 12) * radius)
+	for other_id in state:
+		var p: Dictionary = state[other_id]
+		if other_id == id or p.surface != requested.surface: continue
+		var other := dimensions(other_id, int(p.orientation))
+		for x in [p.x - size.x - 0.04, p.x + other.x + 0.04]:
+			offsets.append(Vector2(x - requested.x, 0))
+			for y in [p.y - size.y - 0.04, p.y + other.y + 0.04]:
+				offsets.append(Vector2(x - requested.x, y - requested.y))
+		for y in [p.y - size.y - 0.04, p.y + other.y + 0.04]:
+			offsets.append(Vector2(0, y - requested.y))
+	var distance := 0.0
+	for offset in offsets:
 		var p := fit(id, requested.surface, requested.x + offset.x, requested.y + offset.y, int(requested.orientation))
 		var next := overlap(state, id, p)
-		if next < score:
+		var moved := Vector2(p.x - requested.x, p.y - requested.y).length_squared()
+		if next < score - 0.0001 or (absf(next - score) < 0.0001 and moved < distance):
 			best = p
 			score = next
+			distance = moved
 	return best
 
 func moment(state: Dictionary, completed: bool) -> Dictionary:

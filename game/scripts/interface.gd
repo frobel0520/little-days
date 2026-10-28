@@ -22,6 +22,12 @@ var modal_kind := ""
 var scene_rect := Rect2()
 var chapter: Dictionary
 var layout_pending := true
+var selected_row: HBoxContainer
+var preview: SubViewportContainer
+var preview_stage: Node3D
+var preview_id := ""
+var keepsake: SubViewportContainer
+var keepsake_stage: Node3D
 
 func text(value: String, font_size := 16) -> Label:
 	var label := Label.new()
@@ -41,7 +47,7 @@ func rich(height: float) -> RichTextLabel:
 func button(key: String, value: String, target: String = "") -> Button:
 	var result := Button.new()
 	result.text = value
-	result.custom_minimum_size = Vector2(0, 38)
+	result.custom_minimum_size = Vector2(0, 42)
 	result.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	result.pressed.connect(func(): action.emit(key, target))
 	if target.is_empty():
@@ -69,7 +75,9 @@ func _ready() -> void:
 	theme_data.set_color("default_color", "RichTextLabel", Color("777f69"))
 	for type in ["Button", "OptionButton"]:
 		theme_data.set_color("font_color", type, Color("606c56"))
-		theme_data.set_color("font_disabled_color", type, Color("a5ad98"))
+		theme_data.set_color("font_disabled_color", type, Color("7b826f"))
+		for state_name in ["font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+			theme_data.set_color(state_name, type, Color("37452d"))
 	theme = theme_data
 	heading = text("小日子收納 · 街角的貓", 26)
 	add_child(heading)
@@ -115,12 +123,20 @@ func _ready() -> void:
 	content.add_child(items_grid)
 	story = rich(74)
 	content.add_child(story)
-	content.add_child(text("選好小物，也可以直接放到", 13))
+	selected_row = HBoxContainer.new()
+	column.add_child(selected_row)
+	preview = model_view(Vector2(48, 48))
+	selected_row.add_child(preview)
+	preview_stage = preview.get_child(0).get_child(0)
+	var details := button("item_story", "讀今天的便條")
+	details.clip_text = true
+	details.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	selected_row.add_child(details)
 	surfaces_grid = GridContainer.new()
 	surfaces_grid.columns = 3
 	surfaces_grid.add_theme_constant_override("h_separation", 5)
 	surfaces_grid.add_theme_constant_override("v_separation", 5)
-	content.add_child(surfaces_grid)
+	column.add_child(surfaces_grid)
 	cat_status = text("", 12)
 	cat_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	cat_status.custom_minimum_size.y = 34
@@ -173,7 +189,12 @@ func build_dialog() -> void:
 	panel.add_child(column)
 	dialog_title = text("貓咪筆記", 24)
 	column.add_child(dialog_title)
-	dialog_body = rich(100)
+	keepsake = model_view(Vector2(0, 180))
+	keepsake.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_child(keepsake)
+	keepsake_stage = keepsake.get_child(0).get_child(0)
+	keepsake.hide()
+	dialog_body = rich(60)
 	dialog_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	dialog_body.add_theme_font_size_override("normal_font_size", 17)
 	column.add_child(dialog_body)
@@ -181,37 +202,95 @@ func build_dialog() -> void:
 	column.add_child(button("dialog_close", "回到房間"))
 	dialog.hide()
 
+func model_view(minimum: Vector2) -> SubViewportContainer:
+	var container := SubViewportContainer.new()
+	container.custom_minimum_size = minimum
+	container.stretch = true
+	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var view := SubViewport.new()
+	view.own_world_3d = true
+	view.transparent_bg = true
+	view.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
+	container.add_child(view)
+	var root := Node3D.new()
+	view.add_child(root)
+	var environment := WorldEnvironment.new()
+	environment.environment = Environment.new()
+	environment.environment.background_mode = Environment.BG_CLEAR_COLOR
+	environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	environment.environment.ambient_light_color = Color.WHITE
+	environment.environment.ambient_light_energy = 0.9
+	root.add_child(environment)
+	var light := DirectionalLight3D.new()
+	light.rotation_degrees = Vector3(-40, -30, 0)
+	light.light_energy = 0.5
+	root.add_child(light)
+	var camera := Camera3D.new()
+	camera.name = "Camera"
+	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.current = true
+	root.add_child(camera)
+	return container
+
+func show_model(root: Node3D, data: Dictionary, front := false) -> void:
+	if root.has_node("Model"):
+		root.get_node("Model").free()
+	var model: Node3D = preload("res://scripts/art.gd").new().item(data)
+	model.name = "Model"
+	root.add_child(model)
+	var center := Vector3(0, float(data.h) / 2, 0)
+	var camera: Camera3D = root.get_node("Camera")
+	camera.size = maxf(float(data.h), maxf(float(data.w), float(data.d))) * 1.6
+	camera.position = center + (Vector3(0.1, 0.15, 3) if front else Vector3(2, 2, 3))
+	camera.look_at(center)
+
+func show_keepsake(data: Dictionary) -> void:
+	show_model(keepsake_stage, data, true)
+	keepsake.show()
+
 func layout() -> void:
 	var screen := get_viewport_rect().size
+	var landscape := screen.x > screen.y and screen.y < 600 and screen.x >= 650
 	var compact := screen.x < 900
-	var header_height := 106.0 if compact else 98.0
-	var footer_height := 110.0 if compact else 72.0
-	heading.add_theme_font_size_override("font_size", 23 if compact else 28)
-	chapter_picker.position = Vector2(18, 53)
-	chapter_picker.size = Vector2(maxf(150, screen.x - 204) if compact else 480, 38)
-	controls.previous.position = Vector2(screen.x - 174 if compact else 508, 53)
+	var phone := compact and not landscape
+	var area_width := screen.x - 314 if landscape else screen.x
+	var header_height := 98.0
+	var footer_height := 110.0 if phone else 72.0
+	heading.add_theme_font_size_override("font_size", 21 if compact else 28)
+	chapter_picker.position = Vector2(12, 53)
+	chapter_picker.size = Vector2(maxf(150, area_width - 184) if compact else 480, 38)
+	controls.previous.position = Vector2(area_width - 166 if compact else 508, 53)
 	controls.previous.size = Vector2(74, 38)
-	controls.next.position = Vector2(screen.x - 94 if compact else 588, 53)
+	controls.next.position = Vector2(area_width - 86 if compact else 588, 53)
 	controls.next.size = Vector2(74, 38)
-	controls.notebook.position = Vector2(screen.x - 112, 10)
+	controls.notebook.position = Vector2(area_width - 106, 10)
 	controls.notebook.size = Vector2(94, 36)
-	if compact:
-		var panel_height := minf(310, screen.y * 0.37)
+	mission.visible = not compact
+	story.visible = not compact
+	counter.visible = not compact
+	cat_status.custom_minimum_size.y = 24 if compact else 34
+	if phone:
+		var panel_height := minf(364, screen.y * 0.44)
 		sidebar.position = Vector2(12, screen.y - footer_height - panel_height)
 		sidebar.size = Vector2(screen.x - 24, panel_height - 8)
-		scene_rect = Rect2(0, header_height, screen.x, maxf(130, sidebar.position.y - header_height - 6))
+		scene_rect = Rect2(0, header_height, screen.x, maxf(80, sidebar.position.y - header_height - 6))
+	elif landscape:
+		sidebar.position = Vector2(screen.x - 308, 8)
+		sidebar.size = Vector2(300, screen.y - 16)
+		scene_rect = Rect2(0, header_height, area_width, screen.y - header_height - footer_height - 8)
 	else:
 		sidebar.position = Vector2(screen.x - 342, header_height)
 		sidebar.size = Vector2(328, screen.y - header_height - footer_height - 10)
 		scene_rect = Rect2(0, header_height, screen.x - 354, screen.y - header_height - footer_height - 8)
-	footer.columns = 4 if compact else 8
+	footer.columns = 4 if phone else 8
 	footer.position = Vector2(12, screen.y - footer_height + 2)
-	footer.size = Vector2(screen.x - 24, footer_height - 32)
+	footer.size = Vector2(area_width - 24, footer_height - 32)
 	message.position = Vector2(16, screen.y - 28)
-	message.size = Vector2(screen.x - 32, 26)
+	message.size = Vector2(area_width - 32, 26)
 	var panel: PanelContainer = dialog.get_node("Paper")
-	panel.size = Vector2(minf(screen.x - 32, 650), minf(screen.y - 60, 640))
+	panel.size = Vector2(minf(screen.x - 32, 650), minf(screen.y - 24, 640))
 	panel.position = (screen - panel.size) / 2
+	keepsake.custom_minimum_size.y = minf(180, screen.y * 0.23)
 
 func fill_chapter(data: Dictionary, chapters: Array, index: int) -> void:
 	chapter = data
@@ -254,6 +333,14 @@ func update(state: Dictionary, selected: String, rules: RefCounted, completed: b
 		control.tooltip_text = hint_name + "\n" + hint_story
 		control.modulate = Color("c6d6b0") if selected == it.id else Color.WHITE
 	var selected_item: Dictionary = rules.item(selected)
+	controls.item_story.text = "便條 · %d/%d" % [rules.count(state), chapter.items.size()] if selected.is_empty() else selected_item.get("shortName", selected_item.name) + " · 小故事"
+	preview.visible = not selected.is_empty()
+	var model_id := selected + str(completed)
+	if not selected.is_empty() and preview_id != model_id:
+		var visual: Dictionary = selected_item.duplicate(true)
+		if completed and visual.has("reveal_on_complete"): visual.motif = visual.reveal_on_complete
+		show_model(preview_stage, visual)
+	preview_id = model_id
 	if selected_item.is_empty():
 		story.text = "先挑一件小物。拖曳拿起，也可以用家具按鈕放下。"
 	else:
@@ -274,6 +361,7 @@ func update(state: Dictionary, selected: String, rules: RefCounted, completed: b
 
 func show_dialog(kind: String, title_value: String, body: String, can_next := false) -> void:
 	modal_kind = kind
+	keepsake.hide()
 	dialog_title.text = title_value
 	dialog_body.text = body
 	controls.dialog_next.visible = can_next
@@ -287,10 +375,10 @@ func close_dialog() -> void:
 
 func control_state(control: Control) -> Dictionary:
 	var rect := control.get_global_rect()
-	return {"x": rect.get_center().x, "y": rect.get_center().y, "visible": control.is_visible_in_tree(), "disabled": control.disabled if control is BaseButton else false, "pressed": control.is_pressed() if control is BaseButton else false, "text": control.text if control is Button else ""}
+	return {"x": rect.get_center().x, "y": rect.get_center().y, "visible": control.is_visible_in_tree(), "disabled": control.disabled if control is BaseButton else false, "pressed": control.is_pressed() if control is BaseButton else false, "text": control.text if control is Button else "", "width": rect.size.x, "height": rect.size.y, "font_focus": control.get_theme_color("font_focus_color").to_html() if control is Button else ""}
 
 func inspect() -> Dictionary:
-	var result := {"buttons": {}, "item_buttons": {}, "surface_buttons": {}, "scroll": {"x": scroll.get_global_rect().get_center().x, "y": scroll.get_global_rect().get_center().y, "top": scroll.global_position.y, "bottom": scroll.global_position.y + scroll.size.y}, "modal": modal_kind, "message": message.text}
+	var result := {"buttons": {}, "item_buttons": {}, "surface_buttons": {}, "scroll": {"x": scroll.get_global_rect().get_center().x, "y": scroll.get_global_rect().get_center().y, "top": scroll.global_position.y, "bottom": scroll.global_position.y + scroll.size.y}, "modal": modal_kind, "message": message.text, "scene_rect": {"x": scene_rect.position.x, "y": scene_rect.position.y, "w": scene_rect.size.x, "h": scene_rect.size.y}, "keepsake_visible": keepsake.is_visible_in_tree(), "preview_visible": preview.is_visible_in_tree(), "story_text": story.text}
 	for key in controls:
 		result.buttons[key] = control_state(controls[key])
 	for key in item_buttons:
