@@ -1,0 +1,53 @@
+{
+  "environment": "cloud Chromium SwiftShader, local server; not physical phone performance",
+  "resources": [
+    {
+      "url": "/engine-0.bin.gz",
+      "bytes": 3208428
+    },
+    {
+      "url": "/engine-1.bin.gz",
+      "bytes": 2702119
+    },
+    {
+      "url": "/engine-2.bin.gz",
+      "bytes": 3563025
+    }
+  ],
+  "samples": [
+    {
+      "case": "desktop-cold-local",
+      "ready_seconds": 2.978
+    },
+    {
+      "case": "desktop-software-webgl",
+      "frame_p95_ms": 150.0,
+      "draw_calls": 218.0,
+      "frame_samples": 99
+    },
+    {
+      "case": "390x844-software-webgl",
+      "frame_p95_ms": 147.433333333333,
+      "draw_calls": 124.0,
+      "frame_samples": 43
+    },
+    {
+      "case": "844x390-software-webgl",
+      "frame_p95_ms": 150.0,
+      "draw_calls": 124.0,
+      "frame_samples": 42
+    },
+    {
+      "case": "360x740-software-webgl",
+      "frame_p95_ms": 148.3,
+      "draw_calls": 124.0,
+      "frame_samples": 43
+    },
+    {
+      "case": "932x430-software-webgl",
+      "frame_p95_ms": 149.166666666667,
+      "draw_calls": 122.0,
+      "frame_samples": 37
+    }
+  ]
+}

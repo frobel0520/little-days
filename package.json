@@ -11,7 +11,9 @@
     "test:godot": "node scripts/test-game.mjs",
     "vendor": "node scripts/vendor.mjs",
     "prototype:build": "node scripts/build-tabletop.mjs",
-    "deploy": "npm run build && wrangler pages deploy game-build --project-name playmint-little-days --branch main"
+    "deploy": "npm run build && wrangler pages deploy game-build --project-name playmint-little-days --branch main",
+    "test:browser": "python3 game/tests/browser_smoke.py && python3 game/tests/features_smoke.py",
+    "assets:audio": "python3 scripts/generate-audio.py"
   },
   "dependencies": {
     "pixi.js": "8.21.0"

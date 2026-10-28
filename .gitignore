@@ -8,3 +8,6 @@ preview-*.png
 .godot/
 prototype-build/
 game-build/
+
+# Python browser-test bytecode
+__pycache__/

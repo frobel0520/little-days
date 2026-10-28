@@ -1,0 +1,110 @@
+# Harbor 部署執行器模板：Cloudflare Pages（node／static 建置 profile）。
+# 複製到接入 repo 的 .github/workflows/harbor-release.yml，放在受保護的 main；只由 Harbor GitHub App 以 workflow_dispatch 觸發。
+# 需由 Owner 設定：GitHub environment「production」（限 main）與其 secrets CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID；
+# 並把 report.sh 複製到 .github/harbor/report.sh。站台需提供 /version.json：{"commit":"<完整SHA>"}，供 Harbor 讀回。
+name: harbor-release
+on:
+  workflow_dispatch:
+    inputs:
+      release_id: { required: true, type: string }
+      source_sha: { required: true, type: string }
+      target: { required: true, type: string }
+      environment: { required: true, type: string }
+permissions: {}
+concurrency:
+  group: harbor-release-${{ inputs.target }}-${{ inputs.environment }}
+  cancel-in-progress: false
+env:
+  HARBOR_RELEASE_ACTOR: ${{ vars.HARBOR_RELEASE_ACTOR }}
+  HARBOR_URL: https://harbor-1wk.pages.dev
+  RELEASE_ID: ${{ inputs.release_id }}
+  SOURCE_SHA: ${{ inputs.source_sha }}
+  TARGET_REQUEST: ${{ inputs.target }}
+  ENVIRONMENT_REQUEST: ${{ inputs.environment }}
+  # 平台資源與工具版本須與 Harbor 部署設定一致；改這裡也要改設定（revision 遞增、舊核准失效）。
+  PAGES_PROJECT: playmint-little-days
+  NODE_VERSION: 24.19.0
+  WRANGLER_VERSION: 4.153.0
+  BUILD_DIR: game-build
+
+jobs:
+  build:
+    # 建置 job 執行來源 repo 的程式碼，因此沒有任何發布 secret，也不使用 environment。
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # 不給 id-token：來源程式碼不能取得 harbor-release OIDC 而偽造回報。
+    permissions: { contents: read }
+    outputs:
+      digest: ${{ steps.pack.outputs.digest }}
+    steps:
+      - name: Validate inputs
+        shell: bash
+        run: |
+          test -n "$HARBOR_RELEASE_ACTOR"
+          test "$GITHUB_ACTOR" = "$HARBOR_RELEASE_ACTOR"
+          test "$TARGET_REQUEST" = pages
+          test "$ENVIRONMENT_REQUEST" = production
+          test "$GITHUB_REF" = refs/heads/main
+          [[ "$RELEASE_ID" =~ ^[0-9a-f-]{36}$ && "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { ref: '${{ inputs.source_sha }}', persist-credentials: false }
+      - name: Confirm checked-out commit
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: '${{ env.NODE_VERSION }}' }
+      - name: Install verified Godot
+        run: bash scripts/install-godot-ci.sh
+      - name: Build and verify
+        run: |
+          npm ci
+          npm test
+          npm run build
+          npm run test:godot
+          npx --yes wrangler@4.153.0 pages functions build functions --outdir game-build/_worker.js
+          node scripts/check-build.mjs
+      - name: Write version endpoint
+        run: printf '{"commit":"%s"}\n' "$SOURCE_SHA" > "$BUILD_DIR/version.json"
+      - name: Pack and digest
+        id: pack
+        run: |
+          tar -C "$BUILD_DIR" -cf site.tar .
+          echo "digest=sha256:$(sha256sum site.tar | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: site, path: site.tar, retention-days: 1, if-no-files-found: error }
+
+  deploy:
+    # 不 checkout 來源 SHA：不載入其 npm script、wrangler 設定或 JS；只部署核對過 digest 的產物。
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: ${{ inputs.environment }}
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { name: site }
+      - name: Verify artifact digest
+        env: { EXPECTED: '${{ needs.build.outputs.digest }}' }
+        run: test "sha256:$(sha256sum site.tar | cut -d' ' -f1)" = "$EXPECTED"
+      - name: Fetch trusted report script
+        # 回報腳本取自 workflow 所在的受保護 ref（github.sha），而非發布來源 SHA。
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { ref: '${{ github.sha }}', sparse-checkout: .github/harbor, path: trusted, persist-credentials: false }
+      - name: Report deploying
+        env: { DIGEST: '${{ needs.build.outputs.digest }}' }
+        run: bash trusted/.github/harbor/report.sh deploying "$DIGEST"
+      - name: Deploy
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          mkdir site && tar -C site -xf site.tar
+          npx --yes "wrangler@${WRANGLER_VERSION}" pages deploy site --project-name "$PAGES_PROJECT" --branch main \
+            --commit-hash "$SOURCE_SHA" --commit-dirty=false
+          echo "version=pages-${SOURCE_SHA:0:12}" >> "$GITHUB_OUTPUT"
+      - name: Report deployed
+        env: { DIGEST: '${{ needs.build.outputs.digest }}', VERSION: '${{ steps.deploy.outputs.version }}' }
+        run: bash trusted/.github/harbor/report.sh deployed "$DIGEST" "$VERSION"
+      - name: Report failure
+        if: failure()
+        run: bash trusted/.github/harbor/report.sh failed || true
