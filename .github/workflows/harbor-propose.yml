@@ -1,7 +1,13 @@
 name: Harbor propose
 on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', 'README.md', 'progress.md']
   workflow_dispatch:
 permissions: {}
+concurrency:
+  group: harbor-proposal-main
+  cancel-in-progress: false
 jobs:
   propose:
     runs-on: ubuntu-24.04
