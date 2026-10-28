@@ -8,6 +8,7 @@ func material(hex: String, roughness := 0.8) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = Color(hex)
 	m.roughness = roughness
+	m.metallic_specular = 0.25
 	materials[hex] = m
 	return m
 
@@ -350,32 +351,36 @@ func cat(data: Dictionary, pose: String) -> Node3D:
 	var root := Node3D.new()
 	var body := Node3D.new()
 	root.add_child(body)
+	var head := Node3D.new()
+	root.add_child(head)
+	root.set_meta("head", head)
 	var color: String = data.color.trim_prefix("#")
 	var accent: String = data.accent.trim_prefix("#")
 	var sleeping := pose == "sleep"
 	if pose != "hidden":
 		sphere(body, Vector3(0, 0.27, 0), Vector3(0.26, 0.34 if not sleeping else 0.22, 0.34), color)
-		sphere(body, Vector3(0, 0.52 if not sleeping else 0.32, 0.18), Vector3(0.25, 0.22, 0.21), color)
+		sphere(head, Vector3(0, 0.52 if not sleeping else 0.32, 0.18), Vector3(0.25, 0.22, 0.21), color)
 		for x in [-0.15, 0.15]:
-			var ear := cylinder(body, 0.12, 0, 0.22, Vector3(x, 0.75 if not sleeping else 0.55, 0.15), color)
+			var ear := cylinder(head, 0.12, 0, 0.22, Vector3(x, 0.75 if not sleeping else 0.55, 0.15), color)
 			ear.scale.z = 0.5
 			sphere(body, Vector3(x * 0.7, 0.09, 0.23), Vector3(0.10, 0.075, 0.12), accent)
 		if color != "555b59":
 			sphere(body, Vector3(0, 0.30, 0.28), Vector3(0.16, 0.20, 0.09), accent)
 			if color == "f0ddc5":
-				sphere(body, Vector3(-0.17, 0.62 if not sleeping else 0.42, 0.16), Vector3(0.10, 0.13, 0.18), "786f5b")
+				sphere(head, Vector3(-0.17, 0.62 if not sleeping else 0.42, 0.16), Vector3(0.10, 0.13, 0.18), "786f5b")
 	for i in range(7):
 		var a := i * 0.38
 		var b := (i + 1) * 0.38
 		line(body, Vector3(sin(a) * 0.37, 0.09 + i * 0.01, -cos(a) * 0.37), Vector3(sin(b) * 0.37, 0.10 + i * 0.01, -cos(b) * 0.37), 0.055, color)
 	bake(body)
+	if head.get_child_count() > 0: bake(head)
 	var eyes: Array[MeshInstance3D] = []
 	if pose != "hidden":
 		var y := 0.55 if not sleeping else 0.35
 		for x in [-0.085, 0.085]:
-			eyes.append(sphere(root, Vector3(x, y, 0.373), Vector3(0.024, 0.03 if not sleeping else 0.006, 0.014), "4c5144" if color != "555b59" else "d4cf8d"))
+			eyes.append(sphere(head, Vector3(x, y, 0.373), Vector3(0.024, 0.03 if not sleeping else 0.006, 0.014), "4c5144" if color != "555b59" else "d4cf8d"))
 		if color != "555b59":
-			sphere(root, Vector3(0, y - 0.065, 0.393), Vector3(0.027, 0.018, 0.014), "b88a7a")
+			sphere(head, Vector3(0, y - 0.065, 0.393), Vector3(0.027, 0.018, 0.014), "b88a7a")
 	root.set_meta("eyes", eyes)
 	for eye in eyes:
 		eye.set_meta("open_height", eye.scale.y)

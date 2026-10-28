@@ -59,6 +59,12 @@ func sanitize(data: Dictionary, content: Dictionary) -> Dictionary:
 		if all_levels is Dictionary and all_levels.get(chapter.id) is Dictionary:
 			var entry: Dictionary = all_levels[chapter.id]
 			result.levels[chapter.id] = {"state": entry.get("state", {}) if entry.get("state", {}) is Dictionary else {}, "completed": entry.get("completed") is bool and entry.completed}
+	var preferences: Variant = data.get("settings", {})
+	result.settings = {"quality": "auto", "sounds": false, "ambience": true}
+	if preferences is Dictionary:
+		if preferences.get("quality") is String and preferences.quality in ["auto", "low", "high"]: result.settings.quality = preferences.quality
+		for option in ["sounds", "ambience"]:
+			if preferences.get(option) is bool: result.settings[option] = preferences[option]
 	for id in content.cats:
 		if data.get("met") is Array and data.met.has(id):
 			result.met.append(id)
@@ -84,3 +90,46 @@ func save(data: Dictionary) -> bool:
 		if file != null:
 			file.store_string(text)
 	return not failed
+
+func backup_text(data: Dictionary) -> String:
+	return JSON.stringify({"format": "little-days-backup", "version": 1, "save": data}, "  ")
+
+func parse_backup(source: String, content: Dictionary) -> Dictionary:
+	if source.to_utf8_buffer().size() > 1048576: return {}
+	var parser := JSON.new()
+	if parser.parse(source) != OK: return {}
+	var envelope: Variant = parser.data
+	if envelope is not Dictionary or envelope.get("format") is not String or envelope.format != "little-days-backup": return {}
+	if not (envelope.get("version") is int or envelope.get("version") is float) or envelope.version != 1: return {}
+	var data: Variant = envelope.get("save")
+	if data is not Dictionary or data.get("levels") is not Dictionary: return {}
+	if not (data.get("version") is int or data.get("version") is float) or data.version != 1: return {}
+	var current_valid := false
+	for chapter in content.chapters:
+		if data.get("current") is String and data.current == chapter.id: current_valid = true
+		if not data.levels.has(chapter.id): continue
+		var entry: Variant = data.levels[chapter.id]
+		if entry is not Dictionary or entry.get("state") is not Dictionary or entry.get("completed") is not bool: return {}
+		var rules := preload("res://scripts/rules.gd").new(chapter)
+		for id in entry.state:
+			if rules.item(id).is_empty(): return {}
+			var p: Variant = entry.state[id]
+			if p is not Dictionary or p.get("surface") is not String: return {}
+			for coordinate in ["x", "y", "orientation"]:
+				if not (p.get(coordinate) is int or p.get(coordinate) is float) or not is_finite(float(p[coordinate])): return {}
+			if p.orientation != floorf(p.orientation) or p.orientation < 0 or p.orientation > 3: return {}
+			if rules.fit(id, p.surface, p.x, p.y, int(p.orientation)).is_empty(): return {}
+	if not current_valid: return {}
+	return sanitize(data, content)
+
+func recovery(data: Dictionary = {}) -> Variant:
+	var name := key() + "-before-import"
+	if data.is_empty():
+		return browser_read(name) if OS.has_feature("web") else JSON.parse_string(FileAccess.get_file_as_string("user://" + name + ".json")) if FileAccess.file_exists("user://" + name + ".json") else null
+	var source := JSON.stringify(data)
+	if OS.has_feature("web"):
+		return JavaScriptBridge.eval("(() => { try { localStorage.setItem(%s,%s); return 'saved'; } catch (_) { return 'failed'; } })()" % [JSON.stringify(name), JSON.stringify(source)])
+	var file := FileAccess.open("user://" + name + ".json", FileAccess.WRITE)
+	if file == null: return "failed"
+	file.store_string(source)
+	return "saved"

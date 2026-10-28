@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "profile": {
+    "repoId": 0,
+    "repoFullName": "frobel0520/little-days",
+    "target": "pages",
+    "environment": "production",
+    "adapter": "cloudflare_pages",
+    "buildProfile": "godot",
+    "workflow": { "path": ".github/workflows/harbor-release.yml", "ref": "refs/heads/main" },
+    "allowedSourceRefs": ["refs/heads/main"],
+    "tools": { "node": "24.19.0", "godot": "4.6.3", "wrangler": "4.153.0" },
+    "requiredChecks": [],
+    "migrations": [],
+    "verification": { "method": "http_version", "url": "https://playmint-little-days.pages.dev/version.json" },
+    "platformResource": "playmint-little-days",
+    "credentialProfile": "little-days-pages-production"
+  }
+}

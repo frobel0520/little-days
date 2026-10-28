@@ -28,6 +28,7 @@ var preview_stage: Node3D
 var preview_id := ""
 var keepsake: SubViewportContainer
 var keepsake_stage: Node3D
+var settings_actions: GridContainer
 
 func text(value: String, font_size := 16) -> Label:
 	var label := Label.new()
@@ -92,6 +93,8 @@ func _ready() -> void:
 	add_child(previous)
 	var next := button("next", "下一個")
 	add_child(next)
+	var settings_button := button("settings", "設定")
+	add_child(settings_button)
 	var notes := button("notebook", "貓咪筆記")
 	add_child(notes)
 	sidebar = PanelContainer.new()
@@ -132,6 +135,7 @@ func _ready() -> void:
 	details.clip_text = true
 	details.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	selected_row.add_child(details)
+	selected_row.add_child(button("interact", "摸摸看"))
 	surfaces_grid = GridContainer.new()
 	surfaces_grid.columns = 3
 	surfaces_grid.add_theme_constant_override("h_separation", 5)
@@ -189,6 +193,12 @@ func build_dialog() -> void:
 	panel.add_child(column)
 	dialog_title = text("貓咪筆記", 24)
 	column.add_child(dialog_title)
+	settings_actions = GridContainer.new()
+	settings_actions.columns = 1
+	column.add_child(settings_actions)
+	for spec in [["export", "匯出進度備份"], ["import", "匯入進度備份"], ["recover", "還原匯入前的進度"], ["quality", "畫質：自動"], ["ambience", "環境聲開"], ["settings_sound", "音效關"]]:
+		settings_actions.add_child(button(spec[0], spec[1]))
+	settings_actions.hide()
 	keepsake = model_view(Vector2(0, 180))
 	keepsake.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_child(keepsake)
@@ -251,11 +261,12 @@ func show_keepsake(data: Dictionary) -> void:
 func layout() -> void:
 	var screen := get_viewport_rect().size
 	var landscape := screen.x > screen.y and screen.y < 600 and screen.x >= 650
-	var compact := screen.x < 900
+	var compact := screen.x < 900 or landscape
 	var phone := compact and not landscape
 	var area_width := screen.x - 314 if landscape else screen.x
 	var header_height := 98.0
 	var footer_height := 110.0 if phone else 72.0
+	heading.text = "小日子收納" if compact else "小日子收納 · 街角的貓"
 	heading.add_theme_font_size_override("font_size", 21 if compact else 28)
 	chapter_picker.position = Vector2(12, 53)
 	chapter_picker.size = Vector2(maxf(150, area_width - 184) if compact else 480, 38)
@@ -263,6 +274,8 @@ func layout() -> void:
 	controls.previous.size = Vector2(74, 38)
 	controls.next.position = Vector2(area_width - 86 if compact else 588, 53)
 	controls.next.size = Vector2(74, 38)
+	controls.settings.position = Vector2(area_width - 182, 10)
+	controls.settings.size = Vector2(68, 36)
 	controls.notebook.position = Vector2(area_width - 106, 10)
 	controls.notebook.size = Vector2(94, 36)
 	mission.visible = not compact
@@ -335,6 +348,9 @@ func update(state: Dictionary, selected: String, rules: RefCounted, completed: b
 	var selected_item: Dictionary = rules.item(selected)
 	controls.item_story.text = "便條 · %d/%d" % [rules.count(state), chapter.items.size()] if selected.is_empty() else selected_item.get("shortName", selected_item.name) + " · 小故事"
 	preview.visible = not selected.is_empty()
+	controls.interact.visible = not selected.is_empty() and selected_item.get("kind", "") in ["radio", "windchime", "plant", "flowers", "watering", "cloth", "camera", "mug", "teapot", "book"]
+	controls.interact.disabled = dragging
+	controls.interact.text = {"radio": "聽聽看", "windchime": "搖一搖", "camera": "拍一張", "watering": "澆一點水"}.get(selected_item.get("kind", ""), "摸摸看")
 	var model_id := selected + str(completed)
 	if not selected.is_empty() and preview_id != model_id:
 		var visual: Dictionary = selected_item.duplicate(true)
@@ -362,6 +378,9 @@ func update(state: Dictionary, selected: String, rules: RefCounted, completed: b
 func show_dialog(kind: String, title_value: String, body: String, can_next := false) -> void:
 	modal_kind = kind
 	keepsake.hide()
+	settings_actions.visible = kind == "settings"
+	settings_actions.columns = 2 if get_viewport_rect().size.y < 600 else 1
+	dialog_body.visible = not (kind == "settings" and get_viewport_rect().size.y < 600)
 	dialog_title.text = title_value
 	dialog_body.text = body
 	controls.dialog_next.visible = can_next

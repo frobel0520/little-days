@@ -1,5 +1,6 @@
 import './export-game-content.mjs';
-import { spawnSync } from 'node:child_process';
+import { gzipSync } from 'node:zlib';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -7,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const project = fileURLToPath(new URL('../game/', import.meta.url));
 const destination = new URL('../game-build/', import.meta.url);
+rmSync(destination, { recursive: true, force: true });
 mkdirSync(destination, { recursive: true });
 const env = { ...process.env };
 if (!env.XDG_DATA_HOME && existsSync('/workspace/godot-data/godot/export_templates')) env.XDG_DATA_HOME = '/workspace/godot-data';
@@ -27,7 +29,9 @@ const wasm = readFileSync(new URL('index.wasm', destination));
 const parts = [];
 for (let offset = 0; offset < wasm.length; offset += 12 * 1024 * 1024) {
   const name = `engine-${parts.length}.bin`;
-  writeFileSync(new URL(name, destination), wasm.subarray(offset, offset + 12 * 1024 * 1024));
+  const chunk = wasm.subarray(offset, offset + 12 * 1024 * 1024);
+  writeFileSync(new URL(name, destination), chunk);
+  writeFileSync(new URL(name + '.gz', destination), gzipSync(chunk, { level: 9 }));
   parts.push(name);
 }
 const loader = `<script>
@@ -42,9 +46,11 @@ const loader = `<script>
       async start(controller) {
         try {
           for (const part of parts) {
-            const response = await fetchOriginal(new URL(part, engineUrl), options);
+            const compressed = typeof DecompressionStream !== 'undefined';
+            const response = await fetchOriginal(new URL(part + (compressed ? '.gz' : ''), engineUrl), options);
             if (!response.ok) throw new Error('Cannot load engine part: ' + part);
-            const reader = response.body.getReader();
+            const body = compressed ? response.body.pipeThrough(new DecompressionStream('gzip')) : response.body;
+            const reader = body.getReader();
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
@@ -70,4 +76,12 @@ writeFileSync(htmlPath, html.replace('<script src="index.js"></script>', loader 
 rmSync(new URL('index.wasm', destination));
 cpSync(new URL('../site/', import.meta.url), new URL('archive/', destination), { recursive: true });
 cpSync(new URL('../game/assets/FONT-LICENSE.txt', import.meta.url), new URL('FONT-LICENSE.txt', destination));
+
+const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: project, encoding: 'utf8' }).trim();
+writeFileSync(new URL('version.json', destination), JSON.stringify({ commit }) + '\n');
+writeFileSync(new URL('_headers', destination), `/engine-*
+  Cache-Control: public, max-age=0, must-revalidate
+/version.json
+  Cache-Control: no-store
+`);
 console.log('Little Days 3D exported. npm run dev serves the new game at /. Original browser versions are archived at /archive/.');

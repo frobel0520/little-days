@@ -1,0 +1,22 @@
+name: Harbor propose
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  propose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions: { contents: read, id-token: write }
+    steps:
+      - name: Require trusted main
+        run: test "$GITHUB_REF" = refs/heads/main
+      - name: Propose current commit for Owner approval
+        env:
+          HARBOR_URL: https://harbor-1wk.pages.dev
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="$(curl -fsS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=harbor-release" | jq -er .value)"
+          curl -fsS --max-time 20 -X POST "$HARBOR_URL/api/v1/release-intake" \
+            -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
+            --data '{"project":"little-days","target":"pages","environment":"production"}'

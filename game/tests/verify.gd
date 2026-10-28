@@ -72,6 +72,20 @@ func _initialize() -> void:
 	check(cleaned.memories.cream == ["hello"] and cleaned.met == ["cream"] and cleaned.current == "home", "Save metadata is validated")
 	var invalid_completion := storage.sanitize({"levels": {"home": {"state": {}, "completed": "invalid"}}}, content)
 	check(invalid_completion.levels.home.completed == false, "Malformed legacy completion cannot break the game")
+	var original := {"version": 1, "current": "home", "levels": {"home": {"state": home.initial(), "completed": false}}, "met": ["cream"], "memories": {"cream": ["hello"]}, "settings": {"quality": "low", "sounds": true, "ambience": false}}
+	var imported := storage.parse_backup(storage.backup_text(original), content)
+	check(not imported.is_empty() and imported.settings.quality == "low", "Backup preserves progress and preferences")
+	if not imported.is_empty():
+		for id in original.levels.home.state:
+			var restored: Dictionary = home.restore(imported.levels.home.state)
+			check(home.world(id, restored[id]).is_equal_approx(home.world(id, original.levels.home.state[id])), "Backup preserves precise placement: " + id)
+	check(storage.parse_backup("{broken", content).is_empty(), "Malformed backup cannot replace a save")
+	var invalid := original.duplicate(true)
+	invalid.levels.home.state.mug.x = "invalid"
+	check(storage.parse_backup(storage.backup_text(invalid), content).is_empty(), "Invalid backup coordinates reject entire import")
+	for kind in ["paper", "cloth", "wood", "ceramic", "metal", "rain", "wind", "birds", "radio"]:
+		var sound: AudioStream = load("res://assets/audio/" + kind + ".wav")
+		check(sound != null and sound.get_length() > 0.1, "Playable packaged audio: " + kind)
 	check(total == 85, "All 85 objects were modeled")
 	print("Godot checks: %d solid models, 11 environments, 12 cat poses, photo variants, placement/rotation/height/completion/save validation; failures=%d" % [total, failures])
 	quit(1 if failures else 0)
