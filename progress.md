@@ -1,13 +1,21 @@
 # 小日子收納 · 開發進度
 
-更新：2026-10-27（Asia/Taipei）
+更新：2026-10-28（Asia/Taipei）
 
-狀態：主要開發已遷移 Godot 4.6.3 真 3D。主線六關與五個小品共 11 個日常、85 件小物；公開網站仍為前一版 PixiJS，本次尚未部署。手機／桌機安裝包與雲端同步延後。
+狀態：Godot 4.6.3 真 3D 新版已部署至公開網站，主線六關與五個小品共 11 個日常、85 件小物。GitHub Actions 建置與發布成功，線上版本端點已人工確認符合核准 SHA；Harbor 仍顯示「平台讀回中」，尚未取得平台驗證成功紀錄。手機／桌機安裝包與雲端同步延後。
 
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 
-## 2026-10-28：正式部署申請受阻
+## 2026-10-28：Godot 新版正式上線，Harbor 讀回待確認
+
+- 已啟用 little-days／pages／production 部署接入並完成 Owner 核准；補齊執行器 actor 變數與 production 環境 Secrets，修正缺少 API Token 及 Account ID 不正確造成的發布失敗。憑證與帳號識別值未寫入 repository。
+- [正式發布 run](https://github.com/frobel0520/little-days/actions/runs/40703113524) 的建置及部署均成功；發布來源為 `8dc192864e7cdf1716af75595a84923c57068dac`。
+- 管理端開啟公開 `/version.json`，確認其 `commit` 等於上述完整 SHA。這是版本端點的人工確認，尚未進行正式網站的完整遊玩回歸或真機效能驗收。
+- Harbor 已收到 `deploying` 與 `deployed` 成功回報，最後確認時仍顯示「平台讀回中」，尚無平台讀回成功或逾時紀錄，不將 CI 成功當作 Harbor 驗證完成。
+- 查閱 Harbor 原始碼：部署完成回報會觸發一次即時讀回；補救排程為每小時 07／27／47 分，驗證窗口為 30 分鐘。首輪讀回未完成的原因尚未確認；若後續仍未結案，需查 Harbor 排程、讀回 URL／回應及內部觸發狀態，無須僅因狀態停留而重部署遊戲。
+
+## 2026-10-28：正式部署申請受阻（歷史，後續已完成接入與發布）
 
 Owner 明確委派後，已將測試版 `65dc104` 以非強制 fast-forward 更新到 main，並加入 main 功能推送自動提案（`2eef8ae`）及安全錯誤代碼回報（`6a5b948`）。[實際提案 run](https://github.com/frobel0520/little-days/actions/runs/40685666808) 回 **HTTP 403 (INTAKE_NOT_ALLOWED)**：Harbor 的 little-days／pages／production 接入設定不存在、停用或 repo 對應不符，未能取得 Owner 管理登入進一步區分。這次沒有正式發布，也未讀取／複製其他專案的 secret。程式與測試已完成，接入與核准須由已登入的管理端續辦，見 [接手文件](docs/harbor-activation-handoff.md)。
 
@@ -70,6 +78,8 @@ Owner 明確委派後，已將測試版 `65dc104` 以非強制 fast-forward 更�
 
 ## 下一步
 
+- [ ] 確認 Harbor 平台讀回結案；若持續停留，調查驗證排程與讀回連線。
+- [ ] 完成正式網站的遊玩冒煙測試，確認載入、收納與進度保存。
 - [ ] 收集六關試玩回饋，確認操作、節奏、故事與放鬆感。
 - [ ] 進行 Android／iOS 真機測試與低階裝置效能量測。
 - [ ] 依回饋細修美術與貓咪反應，補足音效和場景生活感。
