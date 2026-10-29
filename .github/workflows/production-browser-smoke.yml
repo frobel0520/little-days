@@ -1,0 +1,45 @@
+name: Published game browser smoke
+on:
+  pull_request:
+    paths: ['.github/workflows/production-browser-smoke.yml', 'game/tests/browser_smoke.py']
+  push:
+    branches: [main]
+    paths: ['.github/workflows/production-browser-smoke.yml', 'game/tests/browser_smoke.py']
+permissions:
+  contents: read
+concurrency:
+  group: published-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install isolated browser tooling
+        run: |
+          python3 -m venv .smoke-venv
+          .smoke-venv/bin/pip install playwright==1.55.1
+          .smoke-venv/bin/python -m playwright install --with-deps chromium
+      - name: Exercise the published game with isolated browser storage
+        env:
+          LITTLE_DAYS_BASE_URL: https://playmint-little-days.pages.dev
+        run: |
+          .smoke-venv/bin/python - <<'PY'
+          import os, runpy
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              os.environ['CHROMIUM_PATH'] = p.chromium.executable_path
+          runpy.run_path('game/tests/browser_smoke.py', run_name='__main__')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: published-game-browser-${{ github.run_id }}
+          path: |
+            /tmp/little-days-*.png
+            preview-fixed-photo-reveal.png
+          retention-days: 14
+          if-no-files-found: warn
