@@ -21,7 +21,7 @@ jobs:
       - name: Install isolated browser tooling
         run: |
           python3 -m venv .smoke-venv
-          .smoke-venv/bin/pip install playwright==1.55.1
+          .smoke-venv/bin/pip install playwright==1.64.1
           .smoke-venv/bin/python -m playwright install --with-deps chromium
       - name: Exercise the published game with isolated browser storage
         env:
