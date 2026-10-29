@@ -1,11 +1,19 @@
 # 小日子收納 · 開發進度
 
-更新：2026-10-28（Asia/Taipei）
+更新：2026-10-29（Asia/Taipei）
 
-狀態：Godot 4.6.3 真 3D 新版已部署至公開網站，主線六關與五個小品共 11 個日常、85 件小物。GitHub Actions 建置與發布成功，線上版本端點已人工確認符合核准 SHA；Harbor 仍顯示「平台讀回中」，尚未取得平台驗證成功紀錄。手機／桌機安裝包與雲端同步延後。
+狀態：Godot 4.6.3 真 3D 新版已部署至公開網站，主線六關與五個小品共 11 個日常、85 件小物。GitHub Actions 建置與發布成功，線上版本端點已人工確認符合核准 SHA；Harbor最新正式收據已為succeeded／platform_readback verified，與核准來源一致。手機／桌機安裝包與雲端同步延後。
 
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
+
+## 2026-10-29：正式平台讀回與公開站回歸完成
+
+Harbor唯讀查核40800422337已確認request succeeded、platform_readback verified/ok，來源SHA與正式發布run40703113524一致；profile啟用且讀回URL符合設定。沒有重部署遊戲。
+
+[正式站瀏覽器40802343472](https://github.com/frobel0520/little-days/actions/runs/40802343472)通過六主線／五小品、滑鼠／觸控放置／旋轉／取消、存檔重載／舊檔匯入、筆記／貓咪記憶及手機直橫向，未發現JS／Godot錯誤。僅隔離瀏覽器storage；不能代替真人試玩、Safari／Android／iOS真機、音訊品質、發熱或低階裝置效能。
+
+以下10/28章節是當時歷史，平台讀回與正式smoke待辦已由本節覆蓋。
 
 ## 2026-10-28：Godot 新版正式上線，Harbor 讀回待確認
 
@@ -78,8 +86,8 @@ Owner 明確委派後，已將測試版 `65dc104` 以非強制 fast-forward 更�
 
 ## 下一步
 
-- [ ] 確認 Harbor 平台讀回結案；若持續停留，調查驗證排程與讀回連線。
-- [ ] 完成正式網站的遊玩冒煙測試，確認載入、收納與進度保存。
+- [x] Harbor平台讀回已結案：正式request succeeded、receipt verified/ok，來源SHA一致。
+- [x] 正式網站遊玩冒煙通過40802343472，六主線／五小品、載入／收納／保存／重載與手機直橫向。
 - [ ] 收集六關試玩回饋，確認操作、節奏、故事與放鬆感。
 - [ ] 進行 Android／iOS 真機測試與低階裝置效能量測。
 - [ ] 依回饋細修美術與貓咪反應，補足音效和場景生活感。
