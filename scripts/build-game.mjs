@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync } fr
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { securityHeaders } from './security-headers.mjs';
 
 const project = fileURLToPath(new URL('../game/', import.meta.url));
 const destination = new URL('../game-build/', import.meta.url);
@@ -72,7 +73,8 @@ const html = readFileSync(htmlPath, 'utf8')
   .replaceAll('background-color: black;', 'background-color: #f1ede3;')
   .replaceAll('background-color: #242424;', 'background-color: #f1ede3;');
 if (!html.includes('<script src="index.js"></script>')) throw new Error('Unexpected Godot HTML shell; engine loader was not installed.');
-writeFileSync(htmlPath, html.replace('<script src="index.js"></script>', loader + '<script src="index.js"></script>'));
+const finalHtml = html.replace('<script src="index.js"></script>', loader + '<script src="index.js"></script>');
+writeFileSync(htmlPath, finalHtml);
 rmSync(new URL('index.wasm', destination));
 cpSync(new URL('../site/', import.meta.url), new URL('archive/', destination), { recursive: true });
 cpSync(new URL('../game/assets/FONT-LICENSE.txt', import.meta.url), new URL('FONT-LICENSE.txt', destination));
@@ -83,5 +85,5 @@ writeFileSync(new URL('_headers', destination), `/engine-*
   Cache-Control: public, max-age=0, must-revalidate
 /version.json
   Cache-Control: no-store
-`);
+${securityHeaders(finalHtml)}`);
 console.log('Little Days 3D exported. npm run dev serves the new game at /. Original browser versions are archived at /archive/.');
