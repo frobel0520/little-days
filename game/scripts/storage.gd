@@ -10,9 +10,17 @@ func _init(test_mode: bool) -> void:
 func key() -> String:
 	return KEY + ("-playtest" if playtest else "")
 
+# 網頁版透過 game/web/little-days-bridge.js 讀寫 localStorage（不執行字串程式碼，CSP 不需 'unsafe-eval'）。
+func bridge() -> JavaScriptObject:
+	return JavaScriptBridge.get_interface("littleDays")
+
 func browser_read(name: String) -> Variant:
-	var source: Variant = JavaScriptBridge.eval("(() => { try { return localStorage.getItem(%s); } catch (_) { return null; } })()" % JSON.stringify(name))
+	var source: Variant = bridge().read(name)
 	return JSON.parse_string(source) if source is String else null
+
+func browser_write(name: String, text: String) -> String:
+	var outcome: Variant = bridge().write(name, text)
+	return outcome if outcome is String else "failed"
 
 func load_data(content: Dictionary) -> Dictionary:
 	var loaded: Variant = null
@@ -80,9 +88,9 @@ func save(data: Dictionary) -> bool:
 	data.version = 1
 	var text := JSON.stringify(data)
 	if OS.has_feature("web"):
-		var outcome: Variant = JavaScriptBridge.eval("(() => { try { localStorage.setItem(%s, %s); return 'saved'; } catch (error) { return error.name; } })()" % [JSON.stringify(key()), JSON.stringify(text)])
-		failed = outcome is not String or outcome != "saved"
-		last_error = str(outcome) if failed else ""
+		var outcome := browser_write(key(), text)
+		failed = outcome != "saved"
+		last_error = outcome if failed else ""
 	else:
 		var file := FileAccess.open("user://" + key() + ".json", FileAccess.WRITE)
 		failed = file == null
@@ -128,7 +136,7 @@ func recovery(data: Dictionary = {}) -> Variant:
 		return browser_read(name) if OS.has_feature("web") else JSON.parse_string(FileAccess.get_file_as_string("user://" + name + ".json")) if FileAccess.file_exists("user://" + name + ".json") else null
 	var source := JSON.stringify(data)
 	if OS.has_feature("web"):
-		return JavaScriptBridge.eval("(() => { try { localStorage.setItem(%s,%s); return 'saved'; } catch (_) { return 'failed'; } })()" % [JSON.stringify(name), JSON.stringify(source)])
+		return "saved" if browser_write(name, source) == "saved" else "failed"
 	var file := FileAccess.open("user://" + name + ".json", FileAccess.WRITE)
 	if file == null: return "failed"
 	file.store_string(source)

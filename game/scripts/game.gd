@@ -57,16 +57,19 @@ var pending_import: Dictionary = {}
 var file_dialog: FileDialog
 var web_window: JavaScriptObject
 var frame_samples: Array[float] = []
-var io_clock := 0.0
 var interaction_count := 0
 var suspended := false
 var visibility_callback: JavaScriptObject
+var import_callback: JavaScriptObject
+var web_bridge: JavaScriptObject
 
 func _ready() -> void:
 	content = JSON.parse_string(FileAccess.get_file_as_string("res://data/content.json"))
 	if OS.has_feature("web"):
 		web_window = JavaScriptBridge.get_interface("window")
-		test_mode = str(JavaScriptBridge.eval("window.location.search")).contains("playtest=1")
+		# 固定介面在 game/web/little-days-bridge.js，由 index.html 以 <script src> 載入（不使用 eval）。
+		web_bridge = JavaScriptBridge.get_interface("littleDays")
+		test_mode = bool(web_bridge.isPlaytest())
 		if test_mode:
 			browser = JavaScriptBridge.get_interface("window")
 	configure_display()
@@ -106,10 +109,10 @@ func _ready() -> void:
 	file_dialog.filters = PackedStringArray(["*.json ; 進度備份"])
 	add_child(file_dialog)
 	file_dialog.file_selected.connect(on_file_selected)
-	if web_window != null:
+	if web_bridge != null:
 		visibility_callback = JavaScriptBridge.create_callback(func(args): set_suspended(bool(args[0])))
-		JavaScriptBridge.eval("window.littleDaysBindVisibility=(cb)=>{const hidden=()=>cb(document.hidden);const blur=()=>cb(true);const focus=()=>cb(document.hidden);document.addEventListener('visibilitychange',hidden);window.addEventListener('blur',blur);window.addEventListener('focus',focus);window.littleDaysRemoveVisibility=()=>{document.removeEventListener('visibilitychange',hidden);window.removeEventListener('blur',blur);window.removeEventListener('focus',focus);};};")
-		web_window.littleDaysBindVisibility(visibility_callback)
+		import_callback = JavaScriptBridge.create_callback(func(args): call_deferred("prepare_import", str(args[0])))
+		web_bridge.bindVisibility(visibility_callback)
 		set_suspended(bool(web_window.document.hidden))
 	get_viewport().size_changed.connect(func(): call_deferred("layout"))
 	for i in range(content.chapters.size()):
@@ -840,7 +843,7 @@ func set_suspended(value: bool) -> void:
 		if is_instance_valid(sunlight) and not saved.is_empty(): apply_preferences()
 
 func _exit_tree() -> void:
-	if web_window != null: web_window.littleDaysRemoveVisibility()
+	if web_bridge != null: web_bridge.removeVisibility()
 
 func _process(delta: float) -> void:
 	if not is_instance_valid(camera):
@@ -848,13 +851,6 @@ func _process(delta: float) -> void:
 	if not suspended and delta < 1.0:
 		frame_samples.append(delta * 1000)
 		if frame_samples.size() > 600: frame_samples.pop_front()
-	io_clock += delta
-	if web_window != null and io_clock > 0.25:
-		io_clock = 0
-		var incoming: Variant = web_window.littleDaysImport
-		if incoming is String and not incoming.is_empty():
-			web_window.littleDaysImport = ""
-			prepare_import(incoming)
 	clock += delta
 	if dragging:
 		var node: Node3D = objects[selected]
@@ -978,7 +974,7 @@ func export_backup() -> void:
 	persist()
 	var source: String = storage.backup_text(saved)
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("(() => {const blob=new Blob([%s],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='little-days-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);})()" % JSON.stringify(source))
+		JavaScriptBridge.download_buffer(source.to_utf8_buffer(), "little-days-progress.json", "application/json")
 		tell("已匯出進度備份，請保留下載的檔案。")
 	else:
 		file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
@@ -987,7 +983,7 @@ func export_backup() -> void:
 
 func import_backup() -> void:
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("(() => {const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{const file=input.files[0];if(!file)return;window.littleDaysImport=file.size>1048576?'invalid':await file.text();};input.click();})()")
+		web_bridge.pickBackup(import_callback)
 	else:
 		file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 		file_dialog.popup_centered_ratio(0.7)

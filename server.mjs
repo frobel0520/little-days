@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
+import { contentSecurityPolicy } from './scripts/security-headers.mjs';
 const siteRoot = resolve(import.meta.dirname, 'site');
 const gameRoot = resolve(import.meta.dirname, 'game-build');
 const prototypeRoot = resolve(import.meta.dirname, 'prototype-build/tabletop-3d');
@@ -15,7 +16,10 @@ createServer(async (req, res) => {
     const file = resolve(root, `.${localPath === '/' ? '/index.html' : localPath}`);
     if (!file.startsWith(root + sep)) { res.writeHead(403); res.end(); return; }
     const content = await readFile(file);
-    res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+    const headers = { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' };
+    // 與正式站 _headers 相同：遊戲首頁套用 CSP，本機測試才能發現違規。
+    if (root === gameRoot && file === resolve(gameRoot, 'index.html')) headers['Content-Security-Policy'] = contentSecurityPolicy(content.toString('utf8'));
+    res.writeHead(200, headers);
     res.end(content);
   } catch { res.writeHead(404); res.end('Not found'); }
 }).listen(4317, '127.0.0.1', () => console.log('Little Days: http://127.0.0.1:4317'));

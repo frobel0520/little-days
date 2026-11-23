@@ -73,11 +73,14 @@ const html = readFileSync(htmlPath, 'utf8')
   .replaceAll('background-color: black;', 'background-color: #f1ede3;')
   .replaceAll('background-color: #242424;', 'background-color: #f1ede3;');
 if (!html.includes('<script src="index.js"></script>')) throw new Error('Unexpected Godot HTML shell; engine loader was not installed.');
-const finalHtml = html.replace('<script src="index.js"></script>', loader + '<script src="index.js"></script>');
+// 固定 JS 介面（取代 JavaScriptBridge.eval），以同源檔案載入，CSP 不需要 'unsafe-eval'。
+const bridge = '<script src="little-days-bridge.js"></script>\n';
+const finalHtml = html.replace('<script src="index.js"></script>', loader + bridge + '<script src="index.js"></script>');
 writeFileSync(htmlPath, finalHtml);
 rmSync(new URL('index.wasm', destination));
 cpSync(new URL('../site/', import.meta.url), new URL('archive/', destination), { recursive: true });
 cpSync(new URL('../game/assets/FONT-LICENSE.txt', import.meta.url), new URL('FONT-LICENSE.txt', destination));
+cpSync(new URL('../game/web/little-days-bridge.js', import.meta.url), new URL('little-days-bridge.js', destination));
 
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: project, encoding: 'utf8' }).trim();
 writeFileSync(new URL('version.json', destination), JSON.stringify({ commit }) + '\n');

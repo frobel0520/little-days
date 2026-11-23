@@ -7,10 +7,31 @@ import json
 import math
 import os
 import sys
+import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get("LITTLE_DAYS_BASE_URL", "http://127.0.0.1:4317")
+
+
+def wait_js(page, expression, arg=None, timeout=30000):
+    """Polls from the test runner instead of page.wait_for_function.
+
+    wait_for_function evaluates its predicate string with eval inside the page, which the game's
+    CSP (no 'unsafe-eval') blocks. page.evaluate runs through the DevTools protocol and is not
+    subject to the page CSP, so the game is tested under its production policy.
+    """
+    deadline = time.monotonic() + timeout / 1000
+    last_error = None
+    while True:
+        try:
+            if page.evaluate(expression, arg):
+                return
+        except Exception as error:  # state not published yet; keep polling until the deadline
+            last_error = error
+        if time.monotonic() > deadline:
+            raise TimeoutError(f"Timed out waiting for {expression!r} ({last_error})")
+        page.wait_for_timeout(50)
 
 
 def state(page):
@@ -18,11 +39,11 @@ def state(page):
 
 
 def wait(page, expression):
-    page.wait_for_function("() => { const s = JSON.parse(window.littleDaysState); return " + expression + "; }", timeout=20000)
+    wait_js(page, "() => { const s = JSON.parse(window.littleDaysState); return " + expression + "; }", timeout=20000)
 
 
 def ready(page):
-    page.wait_for_function("window.littleDaysState !== undefined", timeout=90000)
+    wait_js(page, "window.littleDaysState !== undefined", timeout=90000)
 
 
 def reveal(page, group, key):
@@ -46,30 +67,30 @@ def click(page, group, key):
     control = reveal(page, group, key)
     page.mouse.move(control["x"], control["y"])
     page.mouse.down()
-    page.wait_for_function("([group, key]) => JSON.parse(window.littleDaysState)[group][key].pressed", arg=[group, key], timeout=15000)
+    wait_js(page, "([group, key]) => JSON.parse(window.littleDaysState)[group][key].pressed", arg=[group, key], timeout=15000)
     page.mouse.up()
-    page.wait_for_function("([group, key]) => !JSON.parse(window.littleDaysState)[group][key].pressed", arg=[group,key], timeout=15000)
+    wait_js(page, "([group, key]) => !JSON.parse(window.littleDaysState)[group][key].pressed", arg=[group,key], timeout=15000)
 
 
 def choose(page, item):
     click(page, "item_buttons", item)
-    page.wait_for_function("id => JSON.parse(window.littleDaysState).selected === id", arg=item, timeout=15000)
+    wait_js(page, "id => JSON.parse(window.littleDaysState).selected === id", arg=item, timeout=15000)
 
 
 def place(page, item, support):
     choose(page, item)
     click(page, "surface_buttons", support)
-    page.wait_for_function("([id, support]) => JSON.parse(window.littleDaysState).state[id].surface === support", arg=[item, support], timeout=15000)
+    wait_js(page, "([id, support]) => JSON.parse(window.littleDaysState).state[id].surface === support", arg=[item, support], timeout=15000)
     settle(page, item)
 
 
 def settle(page, item):
-    page.wait_for_function("id => { const s = JSON.parse(window.littleDaysState); return !s.dragging && Math.abs(s.items[id].y - s.items[id].expected_y) < 0.004; }", arg=item, timeout=20000)
+    wait_js(page, "id => { const s = JSON.parse(window.littleDaysState); return !s.dragging && Math.abs(s.items[id].y - s.items[id].expected_y) < 0.004; }", arg=item, timeout=20000)
 
 
 def next_chapter(page, expected):
     click(page, "buttons", "next")
-    page.wait_for_function("id => JSON.parse(window.littleDaysState).chapter === id", arg=expected, timeout=15000)
+    wait_js(page, "id => JSON.parse(window.littleDaysState).chapter === id", arg=expected, timeout=15000)
 
 
 def collect_errors(page, errors):
@@ -144,7 +165,7 @@ if __name__ == "__main__":
                 assert not state(page)["buttons"]["greet"]["disabled"]
                 click(page, "buttons", "greet")
                 cat = {"home": "cream", "flowers": "sesame", "books": "ink", "cafe": "sesame", "rooftop": "ink", "courtyard": "cream"}[chapter]
-                page.wait_for_function("id => JSON.parse(window.littleDaysState).memories[id].includes('hello')", arg=cat)
+                wait_js(page, "id => JSON.parse(window.littleDaysState).memories[id].includes('hello')", arg=cat)
                 click(page, "buttons", "finish")
                 wait(page, "s.modal === 'completion' && s.completed")
                 if chapter == "courtyard":
@@ -163,7 +184,7 @@ if __name__ == "__main__":
                     click(page, "buttons", "finish")
                     wait(page, "s.modal === 'completion'")
                     click(page, "buttons", "dialog_next")
-                    page.wait_for_function("id => JSON.parse(window.littleDaysState).chapter === id", arg=chapters[chapter_index + 1], timeout=15000)
+                    wait_js(page, "id => JSON.parse(window.littleDaysState).chapter === id", arg=chapters[chapter_index + 1], timeout=15000)
             assert set(state(page)["met"]) == {"cream", "sesame", "ink"}
             click(page, "buttons", "notebook")
             wait(page, "s.modal === 'notebook'")
@@ -199,7 +220,7 @@ if __name__ == "__main__":
             collect_errors(page, errors)
             # Inspect normal-mode migration through the saved JSON, never a write bridge.
             page.goto(BASE + "/")
-            page.wait_for_function("localStorage.getItem('little-days-godot-v1') !== null", timeout=90000)
+            wait_js(page, "localStorage.getItem('little-days-godot-v1') !== null", timeout=90000)
             migrated = page.evaluate("JSON.parse(localStorage.getItem('little-days-godot-v1'))")
             assert migrated["levels"]["home"]["state"]["camera"]["orientation"] == 1
             assert migrated["levels"]["home"]["state"]["camera"]["surface"] == "desk"
