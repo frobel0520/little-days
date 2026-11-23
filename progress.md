@@ -7,7 +7,11 @@
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 
-## 2026-11-23：遊戲頁 CSP 移除 'unsafe-eval'（分支 `fix/20261123-remove-unsafe-eval`，未合併、未部署）
+## 2026-11-23：script-src 移除 blob:（分支 `fix/sec-p2-20261123-csp-no-blob`，未合併）
+
+Godot 的 AudioWorklet 由同源 `index.audio*.worklet.js` 載入，單執行緒匯出不建立 Worker；`blob:` 只用於游標、圖示與下載。`script-src`、`worker-src` 移除 `blob:`，img／media 保留。新 CSP 下 Godot 建置與檢查、兩支瀏覽器 smoke 全數通過，CSP 違規 0；實測兩個同源 worklet 可 `addModule`、blob worklet 被擋，音效播放正常。Harbor `csp-script` 規則本機檢查為 pass。
+
+## 2026-11-23：遊戲頁 CSP 移除 'unsafe-eval'（PR #11 已合併，待 Harbor 核准部署）
 
 GDScript 不再呼叫 `JavaScriptBridge.eval`：存檔讀寫、匯入選檔與分頁切換改由同源靜態檔 `game/web/little-days-bridge.js` 提供，以 `get_interface`／`create_callback` 呼叫；匯出改用 `JavaScriptBridge.download_buffer`。`script-src` 保留 `'wasm-unsafe-eval'`、`blob:` 與內嵌雜湊。本機伺服器改為對遊戲首頁送出與 `_headers` 相同的 CSP；瀏覽器測試的等待改由測試端輪詢（`wait_for_function` 會在頁內 eval）。Godot 4.6.3 建置、`npm test` 28 項、Godot 檢查與兩支瀏覽器 smoke 在新 CSP 下通過，CSP 違規 0；另以舊版 main 建置實際寫入存檔，新版在同一 origin 讀回一致。存檔格式、遊戲規則、封存版與其他標頭未改。合併部署後需在正式站與 Safari／實機確認。
 
