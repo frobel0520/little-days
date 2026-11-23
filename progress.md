@@ -7,9 +7,9 @@
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 
-## 2026-11-23：遊戲頁 CSP 移除 'unsafe-eval'（分支 `fix/20261123-remove-unsafe-eval`，未合併、未部署）
+## 2026-11-23：遊戲頁 CSP 移除 'unsafe-eval'（已合併、正式部署並完成雙引擎驗證）
 
-GDScript 不再呼叫 `JavaScriptBridge.eval`：存檔讀寫、匯入選檔與分頁切換改由同源靜態檔 `game/web/little-days-bridge.js` 提供，以 `get_interface`／`create_callback` 呼叫；匯出改用 `JavaScriptBridge.download_buffer`。`script-src` 保留 `'wasm-unsafe-eval'`、`blob:` 與內嵌雜湊。本機伺服器改為對遊戲首頁送出與 `_headers` 相同的 CSP；瀏覽器測試的等待改由測試端輪詢（`wait_for_function` 會在頁內 eval）。Godot 4.6.3 建置、`npm test` 28 項、Godot 檢查與兩支瀏覽器 smoke 在新 CSP 下通過，CSP 違規 0；另以舊版 main 建置實際寫入存檔，新版在同一 origin 讀回一致。存檔格式、遊戲規則、封存版與其他標頭未改。合併部署後需在正式站與 Safari／實機確認。
+PR #11 已合併，Owner 核准的 [正式部署](https://github.com/frobel0520/little-days/actions/runs/45105267045) 成功；公開 `/version.json` 讀回完整 SHA `c606ffa6a981fedd3a6ca84abdcb60e63544f0d2`。首頁 CSP 不含 `'unsafe-eval'`、保留 `'wasm-unsafe-eval'`，同源 `little-days-bridge.js` 已載入。Chromium 與 WebKit 行動模式實際觸控放置、重載、匯出下載、清空後匯入恢復、切換分頁後返回均通過；正常模式另以合成舊存檔確認遷移及原檔保留，CSP 違規皆為 0。證據與範圍見 [正式驗證報告](docs/evidence/csp-production-20261123.md)。不取代 iPhone Safari／Android Chrome 真機、真實舊存檔與 OS 切換 App 驗收。存檔格式、遊戲規則與其他標頭未改。
 
 ## 2026-10-29：正式平台讀回與公開站回歸完成
 
