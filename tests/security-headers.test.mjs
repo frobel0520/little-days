@@ -16,6 +16,7 @@ test('CSP allows the Godot runtime and inline hashes without unsafe-inline scrip
   assert.ok(script.includes("'wasm-unsafe-eval'"));
   assert.ok(script.includes(hash('boot();')));
   assert.ok(!script.includes("'unsafe-inline'"));
+  assert.ok(!script.split(' ').includes("'unsafe-eval'"), 'game page must not allow eval()');
   for (const directive of ["object-src 'none'", "base-uri 'self'", "frame-ancestors 'none'", "connect-src 'self'"]) {
     assert.ok(csp.includes(directive), directive);
   }
@@ -28,4 +29,14 @@ test('headers apply CSP to the game root only and common headers everywhere', ()
   assert.ok(text.includes('Cross-Origin-Opener-Policy: same-origin'));
   assert.equal(text.match(/Content-Security-Policy:/g).length, 2);
   assert.ok(!/^\/archive/m.test(text));
+});
+
+test('GDScript never calls JavaScriptBridge.eval, so the CSP can stay without unsafe-eval', async () => {
+  const { readdir, readFile } = await import('node:fs/promises');
+  const dir = new URL('../game/scripts/', import.meta.url);
+  for (const name of await readdir(dir)) {
+    if (!name.endsWith('.gd')) continue;
+    const source = await readFile(new URL(name, dir), 'utf8');
+    assert.ok(!/JavaScriptBridge\.eval\s*\(/.test(source), name);
+  }
 });
