@@ -20,10 +20,11 @@ export function inlineScriptHashes(html) {
 export function contentSecurityPolicy(html) {
   return [
     "default-src 'self'",
-    // Godot 4 需要 'wasm-unsafe-eval' 編譯 WebAssembly；AudioWorklet 以 blob: 模組載入。
+    // Godot 4 需要 'wasm-unsafe-eval' 編譯 WebAssembly。AudioWorklet 由同源的 index.audio*.worklet.js 載入，
+    // 單執行緒匯出不建立 Worker，所以 script-src／worker-src 都不放 blob:（blob: 只用在游標、圖示與下載，屬 img／下載，不是 script）。
     // 不放 'unsafe-eval'：存檔、匯出入與分頁切換改由 game/web/little-days-bridge.js 提供，GDScript 不呼叫 JavaScriptBridge.eval。
-    `script-src 'self' 'wasm-unsafe-eval' blob: ${inlineScriptHashes(html).join(' ')}`.trim(),
-    "worker-src 'self' blob:",
+    `script-src 'self' 'wasm-unsafe-eval' ${inlineScriptHashes(html).join(' ')}`.trim(),
+    "worker-src 'self'",
     "connect-src 'self'",
     "img-src 'self' data: blob:",
     "media-src 'self' data: blob:",

@@ -7,9 +7,13 @@
 公開試玩：https://playmint-little-days.pages.dev/
 Cloudflare Pages：`playmint-little-days`，production branch：`main`。
 
+## 2026-11-24：script-src 移除 blob:（PR #13）
+
+Godot 的 AudioWorklet 由同源 `index.audio*.worklet.js` 載入，單執行緒匯出不建立 Worker；`blob:` 只用於游標、圖示與下載。`script-src`、`worker-src` 移除 `blob:`，img／media 保留。新 CSP 下 Godot 建置與檢查、兩支瀏覽器 smoke 全數通過，CSP 違規 0；實測兩個同源 worklet 可 `addModule`、blob worklet 被擋，音效播放正常。Harbor `csp-script` 規則本機檢查為 pass。合併後需 Harbor 核准部署，並以資安檢查員重跑確認。
+
 ## 2026-11-24：遊戲頁 CSP 已在正式站移除 'unsafe-eval'
 
-GDScript 不再呼叫 `JavaScriptBridge.eval`：存檔讀寫、匯入選檔與分頁切換改由同源靜態檔 `game/web/little-days-bridge.js` 提供，以 `get_interface`／`create_callback` 呼叫；匯出改用 `JavaScriptBridge.download_buffer`。`script-src` 保留 `'wasm-unsafe-eval'`、`blob:` 與內嵌雜湊。本機伺服器改為對遊戲首頁送出與 `_headers` 相同的 CSP；瀏覽器測試的等待改由測試端輪詢（`wait_for_function` 會在頁內 eval）。Godot 4.6.3 建置、`npm test` 28 項、Godot 檢查與兩支瀏覽器 smoke 在新 CSP 下通過，CSP 違規 0；另以舊版 main 建置實際寫入存檔，新版在同一 origin 讀回一致。存檔格式、遊戲規則、封存版與其他標頭未改。
+GDScript 不再呼叫 `JavaScriptBridge.eval`：存檔讀寫、匯入選檔與分頁切換改由同源靜態檔 `game/web/little-days-bridge.js` 提供，以 `get_interface`／`create_callback` 呼叫；匯出改用 `JavaScriptBridge.download_buffer`。`script-src` 保留 `'wasm-unsafe-eval'` 與內嵌雜湊（`blob:` 已於 PR #13 移除）。本機伺服器改為對遊戲首頁送出與 `_headers` 相同的 CSP；瀏覽器測試的等待改由測試端輪詢（`wait_for_function` 會在頁內 eval）。Godot 4.6.3 建置、`npm test` 28 項、Godot 檢查與兩支瀏覽器 smoke 在新 CSP 下通過，CSP 違規 0；另以舊版 main 建置實際寫入存檔，新版在同一 origin 讀回一致。存檔格式、遊戲規則、封存版與其他標頭未改。
 
 [PR #11](https://github.com/frobel0520/little-days/pull/11) 已合併，[正式部署](https://github.com/frobel0520/little-days/actions/runs/45105267045) 與 [公開站 smoke](https://github.com/frobel0520/little-days/actions/runs/45103258427) 成功。正式版 `version.json` 回讀為 `c606ffa`。Chromium 再驗證同源 bridge 載入、物品放置後重整仍保留、備份下載可解析，CSP 違規 0。iPhone Safari／Android Chrome 的真機載入、既有存檔、匯出／匯入及切換 App 回前景仍待確認。
 

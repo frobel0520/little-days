@@ -17,6 +17,8 @@ test('CSP allows the Godot runtime and inline hashes without unsafe-inline scrip
   assert.ok(script.includes(hash('boot();')));
   assert.ok(!script.includes("'unsafe-inline'"));
   assert.ok(!script.split(' ').includes("'unsafe-eval'"), 'game page must not allow eval()');
+  for (const loose of ['blob:', 'data:', '*', 'https:', 'http:']) assert.ok(!script.split(' ').includes(loose), `script-src must not allow ${loose}`);
+  assert.equal(csp.split('; ').find((part) => part.startsWith('worker-src')), "worker-src 'self'");
   for (const directive of ["object-src 'none'", "base-uri 'self'", "frame-ancestors 'none'", "connect-src 'self'"]) {
     assert.ok(csp.includes(directive), directive);
   }
