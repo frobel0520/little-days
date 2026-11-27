@@ -37,7 +37,7 @@ export function contentSecurityPolicy(html) {
   ].join('; ');
 }
 
-/** 全站共用的標頭；CSP 只套在遊戲首頁，/archive/ 的舊版瀏覽器版不受影響。 */
+/** 全站共用的標頭；預設全站（含 /drawer.html 與 SPA fallback 子頁）套用遊戲 CSP，/archive/ 舊版瀏覽器版獨立處理。 */
 export function securityHeaders(html) {
   return `/*
   X-Content-Type-Options: nosniff
@@ -45,9 +45,10 @@ export function securityHeaders(html) {
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Cross-Origin-Opener-Policy: same-origin
-/
   Content-Security-Policy: ${contentSecurityPolicy(html)}
-/index.html
-  Content-Security-Policy: ${contentSecurityPolicy(html)}
+/archive/*
+  ! Content-Security-Policy
+/archive/drawer.html
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 `;
 }

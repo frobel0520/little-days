@@ -9,7 +9,11 @@ function readCookie(header, name) {
     const separator = part.indexOf("=");
     if (separator === -1) continue;
     if (part.slice(0, separator).trim() === name) {
-      return decodeURIComponent(part.slice(separator + 1).trim());
+      try {
+        return decodeURIComponent(part.slice(separator + 1).trim());
+      } catch {
+        return null;
+      }
     }
   }
   return null;
@@ -65,6 +69,153 @@ function isRecord(value) {
 function isNullableString(value) {
   return value === null || typeof value === "string";
 }
+
+// shared/outbound-url.ts
+var LOCAL_HOST_SUFFIXES = [
+  ".localhost",
+  ".local",
+  ".internal",
+  ".home.arpa",
+  ".lan",
+  ".intranet",
+  ".corp",
+  ".test",
+  ".invalid",
+  ".example"
+];
+var LOCAL_HOSTNAMES = /* @__PURE__ */ new Set([
+  "localhost",
+  "localhost.localdomain",
+  "ip6-localhost",
+  "ip6-loopback",
+  "local",
+  "internal",
+  "lan",
+  "intranet",
+  "corp",
+  "test",
+  "invalid",
+  "example"
+]);
+function parseSafeHttpsUrl(value) {
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:") return null;
+  if (url.username !== "" || url.password !== "") return null;
+  if (url.port !== "" && url.port !== "443") return null;
+  const hostname = stripIpv6Brackets(url.hostname.toLowerCase());
+  const policyHostname = hostname.replace(/\.+$/, "");
+  if (policyHostname === "" || isSuspiciousHostname(policyHostname) || isBlockedIpLiteral(policyHostname)) {
+    return null;
+  }
+  return url;
+}
+function normalizeSafeHttpsUrl(value) {
+  const url = parseSafeHttpsUrl(value);
+  if (url === null) return null;
+  const path = url.pathname.replace(/[/]+$/, "");
+  return `${url.origin}${path}`;
+}
+function isSuspiciousHostname(hostname) {
+  if (LOCAL_HOSTNAMES.has(hostname)) return true;
+  if (!hostname.includes(".") && !hostname.includes(":")) return true;
+  return LOCAL_HOST_SUFFIXES.some((suffix) => hostname.endsWith(suffix));
+}
+function isBlockedIpLiteral(hostname) {
+  const ipv4 = parseIpv4(hostname);
+  if (ipv4 !== null) return isBlockedIpv4(ipv4);
+  const ipv6 = parseIpv6(hostname);
+  if (ipv6 === null) return false;
+  if (isIpv4Mapped(ipv6)) {
+    const high = ipv6[6];
+    const low = ipv6[7];
+    if (high === void 0 || low === void 0) return true;
+    return isBlockedIpv4([high >>> 8, high & 255, low >>> 8, low & 255]);
+  }
+  const [first, second] = ipv6;
+  if (first === void 0 || second === void 0) return true;
+  if (ipv6.every((word) => word === 0)) return true;
+  if (ipv6.slice(0, 7).every((word) => word === 0) && ipv6[7] === 1) return true;
+  if ((first & 65024) === 64512) return true;
+  if ((first & 65472) === 65152) return true;
+  if ((first & 65280) === 65280) return true;
+  if (matchesPrefix(ipv6, [8193, 3512], 32)) return true;
+  if (matchesPrefix(ipv6, [8193, 0], 32)) return true;
+  if (matchesPrefix(ipv6, [8193, 1], 32)) return true;
+  if (matchesPrefix(ipv6, [8193, 2], 48)) return true;
+  if (matchesPrefix(ipv6, [8193, 16], 28)) return true;
+  if (matchesPrefix(ipv6, [8193, 32], 28)) return true;
+  if (matchesPrefix(ipv6, [8194], 16)) return true;
+  if (matchesPrefix(ipv6, [16383], 20)) return true;
+  if (matchesPrefix(ipv6, [256, 0, 0, 0], 64)) return true;
+  return (first & 57344) !== 8192;
+}
+function isBlockedIpv4(octets) {
+  const [first, second, third] = octets;
+  if (first === void 0 || second === void 0 || third === void 0) return true;
+  return first === 0 || first === 10 || first === 127 || first === 100 && second >= 64 && second <= 127 || first === 169 && second === 254 || first === 172 && second >= 16 && second <= 31 || first === 192 && second === 168 || first === 192 && second === 0 && third === 0 || first === 192 && second === 0 && third === 2 || first === 192 && second === 31 && third === 196 || first === 192 && second === 52 && third === 193 || first === 192 && second === 88 && third === 99 || first === 198 && (second === 18 || second === 19 || second === 51 && third === 100) || first === 203 && second === 0 && third === 113 || first >= 224;
+}
+function parseIpv4(value) {
+  if (!/^\d+(?:\.\d+){3}$/.test(value)) return null;
+  const octets = value.split(".").map(Number);
+  return octets.length === 4 && octets.every((octet) => Number.isInteger(octet) && octet >= 0 && octet <= 255) ? octets : null;
+}
+function parseIpv6(value) {
+  if (!value.includes(":") || value.includes("%")) return null;
+  const halves = value.split("::");
+  if (halves.length > 2) return null;
+  const left = parseIpv6Words(halves[0] ?? "");
+  const right = parseIpv6Words(halves.length === 2 ? halves[1] ?? "" : "");
+  if (left === null || right === null) return null;
+  if (halves.length === 1) {
+    return left.length === 8 ? left : null;
+  }
+  const missing = 8 - left.length - right.length;
+  if (missing < 1) return null;
+  return [...left, ...new Array(missing).fill(0), ...right];
+}
+function parseIpv6Words(value) {
+  if (value === "") return [];
+  const pieces = value.split(":");
+  const words = [];
+  for (const [index, piece] of pieces.entries()) {
+    if (piece.includes(".")) {
+      if (index !== pieces.length - 1) return null;
+      const ipv4 = parseIpv4(piece);
+      if (ipv4 === null) return null;
+      const [first, second, third, fourth] = ipv4;
+      if (first === void 0 || second === void 0 || third === void 0 || fourth === void 0) return null;
+      words.push(first << 8 | second, third << 8 | fourth);
+      continue;
+    }
+    if (!/^[0-9a-f]{1,4}$/i.test(piece)) return null;
+    words.push(Number.parseInt(piece, 16));
+  }
+  return words.length <= 8 ? words : null;
+}
+function isIpv4Mapped(words) {
+  return words.slice(0, 5).every((word) => word === 0) && words[5] === 65535;
+}
+function matchesPrefix(words, prefix, bits) {
+  const wholeWords = Math.floor(bits / 16);
+  const remainingBits = bits % 16;
+  for (let index = 0; index < wholeWords; index += 1) {
+    if (words[index] !== prefix[index]) return false;
+  }
+  if (remainingBits === 0) return true;
+  const mask = 65535 << 16 - remainingBits & 65535;
+  return ((words[wholeWords] ?? 0) & mask) === ((prefix[wholeWords] ?? 0) & mask);
+}
+function stripIpv6Brackets(hostname) {
+  return hostname.startsWith("[") && hostname.endsWith("]") ? hostname.slice(1, -1) : hostname;
+}
+
+// shared/types.ts
+var SLUG_PATTERN = /^[a-z0-9-]{2,40}$/;
 
 // shared/hmac.ts
 var MIN_SECRET_LENGTH = 32;
@@ -187,6 +338,9 @@ async function decideMaintenanceGate(input) {
   if (config === null) {
     return pass("Harbor \u8A2D\u5B9A\u683C\u5F0F\u4E0D\u7B26\uFF0Cfail-open");
   }
+  if (config.project !== input.slug) {
+    return pass("Harbor \u8A2D\u5B9A\u5C08\u6848\u4E0D\u7B26\uFF0Cfail-open");
+  }
   if (!config.maintenance.enabled) {
     return pass("\u7DAD\u8B77\u6A21\u5F0F\u672A\u958B\u555F");
   }
@@ -200,6 +354,7 @@ function isExemptPath(pathname, extraPaths = []) {
   if (matchesPath(pathname, "/health")) return true;
   if (extraPaths.some((path) => matchesPath(pathname, path))) return true;
   const lower = pathname.toLowerCase();
+  if (lower.startsWith("/api/")) return false;
   return EXEMPT_EXTENSIONS.some((extension) => lower.endsWith(extension));
 }
 function matchesPath(pathname, path) {
@@ -220,8 +375,12 @@ function resolveHarborConnection(env, baked) {
   const baseUrl = nonEmpty(env.HARBOR_BASE_URL) ?? nonEmpty(baked.baseUrl);
   const slug = nonEmpty(env.HARBOR_PROJECT_SLUG) ?? nonEmpty(baked.slug);
   if (baseUrl === null || slug === null) return null;
+  const parsedBase = parseSafeHttpsUrl(baseUrl);
+  if (parsedBase === null || parsedBase.search !== "" || parsedBase.hash !== "" || !SLUG_PATTERN.test(slug)) {
+    return null;
+  }
   return {
-    baseUrl: baseUrl.replace(/[/]+$/, ""),
+    baseUrl: normalizeSafeHttpsUrl(baseUrl),
     slug,
     previewSecret: env.HARBOR_PREVIEW_SECRET ?? ""
   };
@@ -264,14 +423,29 @@ async function applyGate(context) {
   if (decision.kind === "block") {
     return maintenanceResponse(decision.maintenance, decision.retryAfterSeconds);
   }
+  const previewCookie = decision.setPreviewCookie;
+  if (previewCookie !== null && (context.request.method === "GET" || context.request.method === "HEAD")) {
+    const cleanUrl = new URL(context.request.url);
+    cleanUrl.searchParams.delete(PREVIEW_QUERY_PARAM);
+    const redirect = new Response(null, {
+      status: 302,
+      headers: {
+        location: cleanUrl.toString(),
+        "cache-control": "no-store",
+        "referrer-policy": "no-referrer"
+      }
+    });
+    redirect.headers.append("set-cookie", previewCookieHeader(previewCookie));
+    return redirect;
+  }
   const response = await context.next();
-  if (decision.setPreviewCookie === null) return response;
+  if (previewCookie === null) return response;
   const withCookie = new Response(response.body, response);
-  withCookie.headers.append(
-    "set-cookie",
-    `${PREVIEW_COOKIE_NAME}=${encodeURIComponent(decision.setPreviewCookie.token)}; Path=/; Max-Age=${decision.setPreviewCookie.maxAgeSeconds}; HttpOnly; Secure; SameSite=Lax`
-  );
+  withCookie.headers.append("set-cookie", previewCookieHeader(previewCookie));
   return withCookie;
+}
+function previewCookieHeader(cookie) {
+  return `${PREVIEW_COOKIE_NAME}=${encodeURIComponent(cookie.token)}; Path=/; Max-Age=${cookie.maxAgeSeconds}; HttpOnly; Secure; SameSite=Lax`;
 }
 async function loadRuntimeConfig(context, connection) {
   const configUrl = `${connection.baseUrl}/api/v1/public/runtime-config?project=${encodeURIComponent(connection.slug)}`;
@@ -282,7 +456,7 @@ async function loadRuntimeConfig(context, connection) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), CONFIG_TIMEOUT_MS);
   try {
-    const response = await fetch(configUrl, { signal: controller.signal });
+    const response = await fetch(configUrl, { signal: controller.signal, redirect: "manual" });
     if (!response.ok) {
       throw new Error(`Harbor \u56DE\u61C9 ${response.status}`);
     }

@@ -24,13 +24,14 @@ test('CSP allows the Godot runtime and inline hashes without unsafe-inline scrip
   }
 });
 
-test('headers apply CSP to the game root only and common headers everywhere', () => {
+test('headers apply CSP across site routes by default while detaching Godot hashes on /archive/*', () => {
   const text = securityHeaders(html);
   assert.match(text, /^\/\*\n(?:  .+\n)+/);
   assert.ok(text.includes('X-Frame-Options: DENY'));
   assert.ok(text.includes('Cross-Origin-Opener-Policy: same-origin'));
-  assert.equal(text.match(/Content-Security-Policy:/g).length, 2);
-  assert.ok(!/^\/archive/m.test(text));
+  assert.match(text, /^\/\*\n[\s\S]*?  Content-Security-Policy: /);
+  assert.match(text, /^\/archive\/\*\n  ! Content-Security-Policy$/m);
+  assert.match(text, /^\/archive\/drawer\.html\n  Content-Security-Policy: default-src 'self'; script-src 'self';/m);
 });
 
 test('GDScript never calls JavaScriptBridge.eval, so the CSP can stay without unsafe-eval', async () => {
